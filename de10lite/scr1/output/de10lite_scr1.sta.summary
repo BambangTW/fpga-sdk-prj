@@ -1,0 +1,65 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Setup 'i_soc|pll_0|altera_pll_i|general[1].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 2.228
+TNS   : 0.000
+
+Type  : Setup 'i_soc|pll_0|altera_pll_i|general[0].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 25.179
+TNS   : 0.000
+
+Type  : Setup 'JTAG_TCK'
+Slack : 93.994
+TNS   : 0.000
+
+Type  : Hold 'JTAG_TCK'
+Slack : 0.222
+TNS   : 0.000
+
+Type  : Hold 'i_soc|pll_0|altera_pll_i|general[0].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.231
+TNS   : 0.000
+
+Type  : Hold 'i_soc|pll_0|altera_pll_i|general[1].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.232
+TNS   : 0.000
+
+Type  : Recovery 'i_soc|pll_0|altera_pll_i|general[1].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 5.153
+TNS   : 0.000
+
+Type  : Recovery 'i_soc|pll_0|altera_pll_i|general[0].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 43.290
+TNS   : 0.000
+
+Type  : Removal 'i_soc|pll_0|altera_pll_i|general[0].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.550
+TNS   : 0.000
+
+Type  : Removal 'i_soc|pll_0|altera_pll_i|general[1].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.568
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'i_soc|pll_0|altera_pll_i|general[0].gpll~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'i_soc|pll_0|altera_pll_i|general[1].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 3.769
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'MAX10_CLK2_50'
+Slack : 9.670
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'i_soc|pll_0|altera_pll_i|general[0].gpll~PLL_OUTPUT_COUNTER|divclk'
+Slack : 23.759
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'JTAG_TCK'
+Slack : 99.233
+TNS   : 0.000
+
+------------------------------------------------------------
