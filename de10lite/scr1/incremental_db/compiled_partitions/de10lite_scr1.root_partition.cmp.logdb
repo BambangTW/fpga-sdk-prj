@@ -1,3 +1,0 @@
-v1
-GXB_MERGING,PLL Output Counter,289209,de10lite_sopc:i_soc|de10lite_sopc_pll_0:pll_0|altera_pll:altera_pll_i|general[1].gpll~PLL_OUTPUT_COUNTER,de10lite_sopc:i_soc|de10lite_sopc_pll_0:pll_0|altera_pll:altera_pll_i|general[2].gpll~PLL_OUTPUT_COUNTER,
-GXB_MERGING,Clock enable block,27532,de10lite_sopc:i_soc|de10lite_sopc_pll_0:pll_0|altera_pll:altera_pll_i|outclk_wire[1]~CLKENA0,de10lite_sopc:i_soc|de10lite_sopc_pll_0:pll_0|altera_pll:altera_pll_i|outclk_wire[2]~CLKENA0,
