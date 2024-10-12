@@ -5,9 +5,11 @@
   <columns>
    <connections preferredWidth="207" />
    <irq preferredWidth="34" />
-   <inputclock preferredWidth="193" />
+   <inputclock preferredWidth="169" />
+   <description preferredWidth="200" />
+   <export preferredWidth="199" />
   </columns>
  </systemtable>
- <library expandedCategories="Library,Project" />
+ <library expandedCategories="Project,Library" />
  <window width="1938" height="1038" x="-9" y="-9" />
 </preferences>

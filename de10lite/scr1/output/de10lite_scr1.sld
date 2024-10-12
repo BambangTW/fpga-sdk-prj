@@ -2,7 +2,7 @@
   <sld_infos>
     <sld_info hpath="de10lite_sopc:i_soc" name="i_soc">
       <assignment_values>
-        <assignment_value text="QSYS_NAME de10lite_sopc HAS_SOPCINFO 1 GENERATION_ID 1728021968"/>
+        <assignment_value text="QSYS_NAME de10lite_sopc HAS_SOPCINFO 1 GENERATION_ID 1728747374"/>
       </assignment_values>
     </sld_info>
   </sld_infos>

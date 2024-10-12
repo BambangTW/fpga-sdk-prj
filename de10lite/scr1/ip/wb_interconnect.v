@@ -1,3 +1,12 @@
+// Copyright (c) 2024 NeuroEdge
+
+
+//File name		:	wb_interconnect.v
+//Designer		: 	Bambang T. W.
+//Date			: 	10 Oct 2024
+//Description	: 	WISHBONE INTERCONNECT
+//Revision		:	1.0
+
 module wishbone_interconnect (
     input  wire        clk_i,
     input  wire        rst_i,
@@ -57,12 +66,13 @@ module wishbone_interconnect (
         end
     end
 
-    // Address decoding
-    wire sel_s0_m0 = (m0_adr_i[31:28] == 4'h0);
+    // Address decoding for Slave 0 and Slave 1 (GPIO)
+    wire sel_s0_m0 = (m0_adr_i[31:16] == 16'hFFFF);
     wire sel_s1_m0 = (m0_adr_i[31:28] == 4'h1);
+    // wire sel_s1_m0 = (m0_adr_i[31:0] == 32'hFF020000);
 
-    wire sel_s0_m1 = (m1_adr_i[31:28] == 4'h0);
-    wire sel_s1_m1 = (m1_adr_i[31:28] == 4'h1);
+    wire sel_s0_m1 = (m1_adr_i[31:16] == 16'hFFFF);
+    wire sel_s1_m1 = (m1_adr_i[31:16] == 16'hFF02);
 
     // Connect master to slave based on arbitration and address decoding
     always @(*) begin

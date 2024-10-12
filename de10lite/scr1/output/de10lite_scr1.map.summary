@@ -1,13 +1,13 @@
-Analysis & Synthesis Status : Successful - Fri Oct 04 13:09:38 2024
+Analysis & Synthesis Status : Successful - Sat Oct 12 22:37:44 2024
 Quartus Prime Version : 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 Revision Name : de10lite_scr1
 Top-level Entity Name : de10lite_scr1
 Family : Cyclone V
 Logic utilization (in ALMs) : N/A
-Total registers : 4059
+Total registers : 2444
 Total pins : 118
 Total virtual pins : 0
-Total block memory bits : 1,575,296
+Total block memory bits : 1,574,912
 Total DSP Blocks : 3
 Total HSSI RX PCSs : 0
 Total HSSI PMA RX Deserializers : 0
