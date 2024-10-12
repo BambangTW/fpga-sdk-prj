@@ -1,11 +1,8 @@
-// Copyright (c) 2024 NeuroEdge
-
-
-//File name		:	wb_interconnect.v
-//Designer		: 	Bambang T. W.
-//Date			: 	10 Oct 2024
-//Description	: 	WISHBONE INTERCONNECT
-//Revision		:	1.0
+// File name        :   wishbone_interconnect.v
+// Designer         :   Bambang T. W.
+// Date             :   10 Oct 2024
+// Description      :   WISHBONE INTERCONNECT
+// Revision         :   1.0
 
 module wishbone_interconnect (
     input  wire        clk_i,
@@ -41,7 +38,15 @@ module wishbone_interconnect (
     output reg         s1_we_o,
     output reg         s1_stb_o,
     output reg         s1_cyc_o,
-    input  wire        s1_ack_i
+    input  wire        s1_ack_i,
+    // Slave 2 Interface (UART)
+    output reg  [31:0] s2_adr_o,
+    output reg  [31:0] s2_dat_o,
+    input  wire [31:0] s2_dat_i,
+    output reg         s2_we_o,
+    output reg         s2_stb_o,
+    output reg         s2_cyc_o,
+    input  wire        s2_ack_i
 );
 
     // Arbitration between masters
@@ -66,34 +71,23 @@ module wishbone_interconnect (
         end
     end
 
-    // Address decoding for Slave 0 and Slave 1 (GPIO)
+    // Address decoding for Slave 0, Slave 1, and Slave 2
     wire sel_s0_m0 = (m0_adr_i[31:16] == 16'hFFFF);
-    wire sel_s1_m0 = (m0_adr_i[31:28] == 4'h1);
-    // wire sel_s1_m0 = (m0_adr_i[31:0] == 32'hFF020000);
+    wire sel_s1_m0 = (m0_adr_i[31:16] == 16'hFF02);
+    wire sel_s2_m0 = (m0_adr_i[31:16] == 16'hFF03);
 
     wire sel_s0_m1 = (m1_adr_i[31:16] == 16'hFFFF);
     wire sel_s1_m1 = (m1_adr_i[31:16] == 16'hFF02);
+    wire sel_s2_m1 = (m1_adr_i[31:16] == 16'hFF03);
 
     // Connect master to slave based on arbitration and address decoding
     always @(*) begin
         // Default outputs
-        s0_adr_o = 32'd0;
-        s0_dat_o = 32'd0;
-        s0_we_o  = 1'b0;
-        s0_stb_o = 1'b0;
-        s0_cyc_o = 1'b0;
-
-        s1_adr_o = 32'd0;
-        s1_dat_o = 32'd0;
-        s1_we_o  = 1'b0;
-        s1_stb_o = 1'b0;
-        s1_cyc_o = 1'b0;
-
-        m0_dat_o = 32'd0;
-        m0_ack_o = 1'b0;
-
-        m1_dat_o = 32'd0;
-        m1_ack_o = 1'b0;
+        s0_adr_o = 32'd0; s0_dat_o = 32'd0; s0_we_o  = 1'b0; s0_stb_o = 1'b0; s0_cyc_o = 1'b0;
+        s1_adr_o = 32'd0; s1_dat_o = 32'd0; s1_we_o  = 1'b0; s1_stb_o = 1'b0; s1_cyc_o = 1'b0;
+        s2_adr_o = 32'd0; s2_dat_o = 32'd0; s2_we_o  = 1'b0; s2_stb_o = 1'b0; s2_cyc_o = 1'b0;
+        m0_dat_o = 32'd0; m0_ack_o = 1'b0;
+        m1_dat_o = 32'd0; m1_ack_o = 1'b0;
 
         if (current_master == 0) begin
             if (sel_s0_m0) begin
@@ -114,6 +108,15 @@ module wishbone_interconnect (
 
                 m0_dat_o = s1_dat_i;
                 m0_ack_o = s1_ack_i;
+            end else if (sel_s2_m0) begin
+                s2_adr_o = m0_adr_i;
+                s2_dat_o = m0_dat_i;
+                s2_we_o  = m0_we_i;
+                s2_stb_o = m0_stb_i;
+                s2_cyc_o = m0_cyc_i;
+
+                m0_dat_o = {24'd0, s2_dat_i[7:0]}; // UART provides 8-bit data
+                m0_ack_o = s2_ack_i;
             end
         end else if (current_master == 1) begin
             if (sel_s0_m1) begin
@@ -134,6 +137,15 @@ module wishbone_interconnect (
 
                 m1_dat_o = s1_dat_i;
                 m1_ack_o = s1_ack_i;
+            end else if (sel_s2_m1) begin
+                s2_adr_o = m1_adr_i;
+                s2_dat_o = m1_dat_i;
+                s2_we_o  = m1_we_i;
+                s2_stb_o = m1_stb_i;
+                s2_cyc_o = m1_cyc_i;
+
+                m1_dat_o = {24'd0, s2_dat_i[7:0]}; // UART provides 8-bit data
+                m1_ack_o = s2_ack_i;
             end
         end
     end
