@@ -73,12 +73,12 @@ module wishbone_interconnect (
 
     // Address decoding for Slave 0, Slave 1, and Slave 2
     wire sel_s0_m0 = (m0_adr_i[31:16] == 16'hFFFF);
-    wire sel_s1_m0 = (m0_adr_i[31:16] == 16'hFF02);
-    wire sel_s2_m0 = (m0_adr_i[31:16] == 16'hFF03);
+    wire sel_s1_m0 = (m0_adr_i[31:16] == 16'h2);
+    wire sel_s2_m0 = (m0_adr_i[31:16] == 16'h3);
 
     wire sel_s0_m1 = (m1_adr_i[31:16] == 16'hFFFF);
     wire sel_s1_m1 = (m1_adr_i[31:16] == 16'hFF02);
-    wire sel_s2_m1 = (m1_adr_i[31:16] == 16'hFF03);
+    wire sel_s2_m1 = (m1_adr_i[31:16] == 16'hFF01);
 
     // Connect master to slave based on arbitration and address decoding
     always @(*) begin

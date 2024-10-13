@@ -1,45 +1,45 @@
-Info (12250): 2024.10.12.22:36:08 Progress: Loading qsys/de10lite_sopc.qsys
-Info (12250): 2024.10.12.22:36:09 Progress: Reading input file
-Info (12250): 2024.10.12.22:36:09 Progress: Adding avl_dmem [altera_avalon_mm_bridge 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module avl_dmem
-Info (12250): 2024.10.12.22:36:10 Progress: Adding avl_imem [altera_avalon_mm_bridge 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module avl_imem
-Info (12250): 2024.10.12.22:36:10 Progress: Adding avl_uart [altera_avalon_mm_bridge 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module avl_uart
-Info (12250): 2024.10.12.22:36:10 Progress: Adding bld_id [altera_avalon_pio 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module bld_id
-Info (12250): 2024.10.12.22:36:10 Progress: Adding core_clk_freq [altera_avalon_pio 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module core_clk_freq
-Info (12250): 2024.10.12.22:36:10 Progress: Adding cpu_clk [clock_source 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module cpu_clk
-Info (12250): 2024.10.12.22:36:10 Progress: Adding default_slave [altera_error_response_slave 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module default_slave
-Info (12250): 2024.10.12.22:36:10 Progress: Adding onchip_ram [altera_avalon_onchip_memory2 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module onchip_ram
-Info (12250): 2024.10.12.22:36:10 Progress: Adding pio_hex_1_0 [altera_avalon_pio 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module pio_hex_1_0
-Info (12250): 2024.10.12.22:36:10 Progress: Adding pio_hex_3_2 [altera_avalon_pio 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module pio_hex_3_2
-Info (12250): 2024.10.12.22:36:10 Progress: Adding pio_hex_5_4 [altera_avalon_pio 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module pio_hex_5_4
-Info (12250): 2024.10.12.22:36:10 Progress: Adding pio_led [altera_avalon_pio 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module pio_led
-Info (12250): 2024.10.12.22:36:10 Progress: Adding pio_sw [altera_avalon_pio 17.1]
-Info (12250): 2024.10.12.22:36:10 Progress: Parameterizing module pio_sw
-Info (12250): 2024.10.12.22:36:10 Progress: Adding pll_0 [altera_pll 17.1]
-Info (12250): 2024.10.12.22:36:11 Progress: Parameterizing module pll_0
-Info (12250): 2024.10.12.22:36:11 Progress: Adding reset_bridge_0 [altera_reset_bridge 17.1]
-Info (12250): 2024.10.12.22:36:11 Progress: Parameterizing module reset_bridge_0
-Info (12250): 2024.10.12.22:36:11 Progress: Adding reset_sequencer_0 [altera_reset_sequencer 17.1]
-Info (12250): 2024.10.12.22:36:11 Progress: Parameterizing module reset_sequencer_0
-Info (12250): 2024.10.12.22:36:11 Progress: Adding sdram [altera_avalon_new_sdram_controller 17.1]
-Info (12250): 2024.10.12.22:36:11 Progress: Parameterizing module sdram
-Info (12250): 2024.10.12.22:36:11 Progress: Adding soc_id [altera_avalon_pio 17.1]
-Info (12250): 2024.10.12.22:36:11 Progress: Parameterizing module soc_id
-Info (12250): 2024.10.12.22:36:11 Progress: Building connections
-Info (12250): 2024.10.12.22:36:11 Progress: Parameterizing connections
-Info (12250): 2024.10.12.22:36:11 Progress: Validating
-Info (12250): 2024.10.12.22:36:13 Progress: Done reading input file
+Info (12250): 2024.10.12.23:29:40 Progress: Loading qsys/de10lite_sopc.qsys
+Info (12250): 2024.10.12.23:29:41 Progress: Reading input file
+Info (12250): 2024.10.12.23:29:41 Progress: Adding avl_dmem [altera_avalon_mm_bridge 17.1]
+Info (12250): 2024.10.12.23:29:41 Progress: Parameterizing module avl_dmem
+Info (12250): 2024.10.12.23:29:41 Progress: Adding avl_imem [altera_avalon_mm_bridge 17.1]
+Info (12250): 2024.10.12.23:29:41 Progress: Parameterizing module avl_imem
+Info (12250): 2024.10.12.23:29:41 Progress: Adding avl_uart [altera_avalon_mm_bridge 17.1]
+Info (12250): 2024.10.12.23:29:41 Progress: Parameterizing module avl_uart
+Info (12250): 2024.10.12.23:29:41 Progress: Adding bld_id [altera_avalon_pio 17.1]
+Info (12250): 2024.10.12.23:29:41 Progress: Parameterizing module bld_id
+Info (12250): 2024.10.12.23:29:41 Progress: Adding core_clk_freq [altera_avalon_pio 17.1]
+Info (12250): 2024.10.12.23:29:41 Progress: Parameterizing module core_clk_freq
+Info (12250): 2024.10.12.23:29:41 Progress: Adding cpu_clk [clock_source 17.1]
+Info (12250): 2024.10.12.23:29:41 Progress: Parameterizing module cpu_clk
+Info (12250): 2024.10.12.23:29:41 Progress: Adding default_slave [altera_error_response_slave 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module default_slave
+Info (12250): 2024.10.12.23:29:42 Progress: Adding onchip_ram [altera_avalon_onchip_memory2 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module onchip_ram
+Info (12250): 2024.10.12.23:29:42 Progress: Adding pio_hex_1_0 [altera_avalon_pio 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module pio_hex_1_0
+Info (12250): 2024.10.12.23:29:42 Progress: Adding pio_hex_3_2 [altera_avalon_pio 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module pio_hex_3_2
+Info (12250): 2024.10.12.23:29:42 Progress: Adding pio_hex_5_4 [altera_avalon_pio 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module pio_hex_5_4
+Info (12250): 2024.10.12.23:29:42 Progress: Adding pio_led [altera_avalon_pio 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module pio_led
+Info (12250): 2024.10.12.23:29:42 Progress: Adding pio_sw [altera_avalon_pio 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module pio_sw
+Info (12250): 2024.10.12.23:29:42 Progress: Adding pll_0 [altera_pll 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module pll_0
+Info (12250): 2024.10.12.23:29:42 Progress: Adding reset_bridge_0 [altera_reset_bridge 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module reset_bridge_0
+Info (12250): 2024.10.12.23:29:42 Progress: Adding reset_sequencer_0 [altera_reset_sequencer 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module reset_sequencer_0
+Info (12250): 2024.10.12.23:29:42 Progress: Adding sdram [altera_avalon_new_sdram_controller 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module sdram
+Info (12250): 2024.10.12.23:29:42 Progress: Adding soc_id [altera_avalon_pio 17.1]
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing module soc_id
+Info (12250): 2024.10.12.23:29:42 Progress: Building connections
+Info (12250): 2024.10.12.23:29:42 Progress: Parameterizing connections
+Info (12250): 2024.10.12.23:29:42 Progress: Validating
+Info (12250): 2024.10.12.23:29:43 Progress: Done reading input file
 Info (12250): De10lite_sopc.core_clk_freq: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
 Info (12250): De10lite_sopc.pll_0: The legal reference clock frequency is 5.0 MHz..800.0 MHz
 Info (12250): De10lite_sopc.pll_0: Able to implement PLL with user settings
@@ -52,34 +52,34 @@ Info (12250): Inserting clock-crossing logic between rsp_demux_003.src0 and rsp_
 Info (12250): Inserting clock-crossing logic between rsp_demux_003.src1 and rsp_mux_001.sink3
 Info (12250): Avl_dmem: "de10lite_sopc" instantiated altera_avalon_mm_bridge "avl_dmem"
 Info (12250): Bld_id: Starting RTL generation for module 'de10lite_sopc_bld_id'
-Info (12250): Bld_id:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_bld_id --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0003_bld_id_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0003_bld_id_gen//de10lite_sopc_bld_id_component_configuration.pl  --do_build_sim=0  ]
+Info (12250): Bld_id:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_bld_id --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0003_bld_id_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0003_bld_id_gen//de10lite_sopc_bld_id_component_configuration.pl  --do_build_sim=0  ]
 Info (12250): Bld_id: Done RTL generation for module 'de10lite_sopc_bld_id'
 Info (12250): Bld_id: "de10lite_sopc" instantiated altera_avalon_pio "bld_id"
 Info (12250): Core_clk_freq: Starting RTL generation for module 'de10lite_sopc_core_clk_freq'
-Info (12250): Core_clk_freq:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_core_clk_freq --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0004_core_clk_freq_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0004_core_clk_freq_gen//de10lite_sopc_core_clk_freq_component_configuration.pl  --do_build_sim=0  ]
+Info (12250): Core_clk_freq:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_core_clk_freq --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0004_core_clk_freq_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0004_core_clk_freq_gen//de10lite_sopc_core_clk_freq_component_configuration.pl  --do_build_sim=0  ]
 Info (12250): Core_clk_freq: Done RTL generation for module 'de10lite_sopc_core_clk_freq'
 Info (12250): Core_clk_freq: "de10lite_sopc" instantiated altera_avalon_pio "core_clk_freq"
 Info (12250): Default_slave: "de10lite_sopc" instantiated altera_error_response_slave "default_slave"
 Info (12250): Onchip_ram: Starting RTL generation for module 'de10lite_sopc_onchip_ram'
-Info (12250): Onchip_ram:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2 -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2/generate_rtl.pl --name=de10lite_sopc_onchip_ram --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0005_onchip_ram_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0005_onchip_ram_gen//de10lite_sopc_onchip_ram_component_configuration.pl  --do_build_sim=0  ]
+Info (12250): Onchip_ram:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2 -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2/generate_rtl.pl --name=de10lite_sopc_onchip_ram --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0005_onchip_ram_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0005_onchip_ram_gen//de10lite_sopc_onchip_ram_component_configuration.pl  --do_build_sim=0  ]
 Info (12250): Onchip_ram: Done RTL generation for module 'de10lite_sopc_onchip_ram'
 Info (12250): Onchip_ram: "de10lite_sopc" instantiated altera_avalon_onchip_memory2 "onchip_ram"
 Info (12250): Pio_hex_1_0: Starting RTL generation for module 'de10lite_sopc_pio_hex_1_0'
-Info (12250): Pio_hex_1_0:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_pio_hex_1_0 --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0006_pio_hex_1_0_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0006_pio_hex_1_0_gen//de10lite_sopc_pio_hex_1_0_component_configuration.pl  --do_build_sim=0  ]
+Info (12250): Pio_hex_1_0:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_pio_hex_1_0 --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0006_pio_hex_1_0_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0006_pio_hex_1_0_gen//de10lite_sopc_pio_hex_1_0_component_configuration.pl  --do_build_sim=0  ]
 Info (12250): Pio_hex_1_0: Done RTL generation for module 'de10lite_sopc_pio_hex_1_0'
 Info (12250): Pio_hex_1_0: "de10lite_sopc" instantiated altera_avalon_pio "pio_hex_1_0"
 Info (12250): Pio_led: Starting RTL generation for module 'de10lite_sopc_pio_led'
-Info (12250): Pio_led:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_pio_led --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0007_pio_led_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0007_pio_led_gen//de10lite_sopc_pio_led_component_configuration.pl  --do_build_sim=0  ]
+Info (12250): Pio_led:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_pio_led --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0007_pio_led_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0007_pio_led_gen//de10lite_sopc_pio_led_component_configuration.pl  --do_build_sim=0  ]
 Info (12250): Pio_led: Done RTL generation for module 'de10lite_sopc_pio_led'
 Info (12250): Pio_led: "de10lite_sopc" instantiated altera_avalon_pio "pio_led"
 Info (12250): Pio_sw: Starting RTL generation for module 'de10lite_sopc_pio_sw'
-Info (12250): Pio_sw:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_pio_sw --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0008_pio_sw_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0008_pio_sw_gen//de10lite_sopc_pio_sw_component_configuration.pl  --do_build_sim=0  ]
+Info (12250): Pio_sw:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=de10lite_sopc_pio_sw --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0008_pio_sw_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0008_pio_sw_gen//de10lite_sopc_pio_sw_component_configuration.pl  --do_build_sim=0  ]
 Info (12250): Pio_sw: Done RTL generation for module 'de10lite_sopc_pio_sw'
 Info (12250): Pio_sw: "de10lite_sopc" instantiated altera_avalon_pio "pio_sw"
 Info (12250): Pll_0: "de10lite_sopc" instantiated altera_pll "pll_0"
 Info (12250): Reset_sequencer_0: "de10lite_sopc" instantiated altera_reset_sequencer "reset_sequencer_0"
 Info (12250): Sdram: Starting RTL generation for module 'de10lite_sopc_sdram'
-Info (12250): Sdram:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller/generate_rtl.pl --name=de10lite_sopc_sdram --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0011_sdram_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_626004043810141541.dir/0011_sdram_gen//de10lite_sopc_sdram_component_configuration.pl  --do_build_sim=0  ]
+Info (12250): Sdram:   Generation command is [exec D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/bin/perl.exe -I D:/programs/intelfpga_lite/17.1/quartus/bin64/perl/lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/europa -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin/perl_lib -I D:/programs/intelfpga_lite/17.1/quartus/sopc_builder/bin -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/common -I D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller -- D:/programs/intelfpga_lite/17.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller/generate_rtl.pl --name=de10lite_sopc_sdram --dir=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0011_sdram_gen/ --quartus_dir=D:/programs/intelfpga_lite/17.1/quartus --verilog --config=C:/Users/bamba/AppData/Local/Temp/alt0008_298241455914953456.dir/0011_sdram_gen//de10lite_sopc_sdram_component_configuration.pl  --do_build_sim=0  ]
 Info (12250): Sdram: Done RTL generation for module 'de10lite_sopc_sdram'
 Info (12250): Sdram: "de10lite_sopc" instantiated altera_avalon_new_sdram_controller "sdram"
 Info (12250): Avalon_st_adapter: Inserting error_adapter: error_adapter_0
@@ -188,6 +188,8 @@ Info (12021): Found 1 design units, including 1 entities, in source file ip/ahb2
 Info (12021): Found 1 design units, including 1 entities, in source file ip/on chip ram/bootloader.v
 Info (12021): Found 1 design units, including 1 entities, in source file ip/bootloader_wb_slave.v
 Info (12021): Found 1 design units, including 1 entities, in source file ip/bootloader_wb_slave2.v
+Info (12021): Found 1 design units, including 1 entities, in source file ip/pll/pll.v
+Info (12021): Found 1 design units, including 1 entities, in source file ip/pll/pll/pll_0002.v
 Info (12021): Found 1 design units, including 1 entities, in source file db/ip/de10lite_sopc/de10lite_sopc.v
 Info (12021): Found 1 design units, including 1 entities, in source file db/ip/de10lite_sopc/submodules/altera_avalon_mm_bridge.v
 Info (12021): Found 1 design units, including 1 entities, in source file db/ip/de10lite_sopc/submodules/altera_avalon_sc_fifo.v
@@ -277,7 +279,12 @@ Warning (10037): Verilog HDL or VHDL warning at de10lite_sopc_sdram.v(318): cond
 Warning (10037): Verilog HDL or VHDL warning at de10lite_sopc_sdram.v(328): conditional expression evaluates to a constant File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/submodules/de10lite_sopc_sdram.v Line: 328
 Warning (10037): Verilog HDL or VHDL warning at de10lite_sopc_sdram.v(338): conditional expression evaluates to a constant File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/submodules/de10lite_sopc_sdram.v Line: 338
 Warning (10037): Verilog HDL or VHDL warning at de10lite_sopc_sdram.v(682): conditional expression evaluates to a constant File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/submodules/de10lite_sopc_sdram.v Line: 682
-Info (12128): Elaborating entity "scr1_top_ahb" for hierarchy "scr1_top_ahb:i_scr1" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 366
+Info (12128): Elaborating entity "pll" for hierarchy "pll:pll_inst" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 323
+Info (12128): Elaborating entity "pll_0002" for hierarchy "pll:pll_inst|pll_0002:pll_inst" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/pll/pll.v Line: 24
+Info (12128): Elaborating entity "altera_pll" for hierarchy "pll:pll_inst|pll_0002:pll_inst|altera_pll:altera_pll_i" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/pll/pll/pll_0002.v Line: 91
+Info (12130): Elaborated megafunction instantiation "pll:pll_inst|pll_0002:pll_inst|altera_pll:altera_pll_i" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/pll/pll/pll_0002.v Line: 91
+Info (12133): Instantiated megafunction "pll:pll_inst|pll_0002:pll_inst|altera_pll:altera_pll_i" with the following parameter: File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/pll/pll/pll_0002.v Line: 91
+Info (12128): Elaborating entity "scr1_top_ahb" for hierarchy "scr1_top_ahb:i_scr1" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 389
 Info (12128): Elaborating entity "scr1_reset_sync_cell" for hierarchy "scr1_top_ahb:i_scr1|scr1_reset_sync_cell:i_pwrup_rstn_reset_sync" File: D:/fpga_project/ALTERA/scr1-sdk/scr1/src/top/scr1_top_ahb.sv Line: 183
 Info (12128): Elaborating entity "scr1_reset_and2_cell" for hierarchy "scr1_top_ahb:i_scr1|scr1_reset_and2_cell:i_tapc_rstn_and2_cell" File: D:/fpga_project/ALTERA/scr1-sdk/scr1/src/top/scr1_top_ahb.sv Line: 216
 Info (12128): Elaborating entity "scr1_core_top" for hierarchy "scr1_top_ahb:i_scr1|scr1_core_top:i_core_top" File: D:/fpga_project/ALTERA/scr1-sdk/scr1/src/top/scr1_top_ahb.sv Line: 282
@@ -320,7 +327,17 @@ Info (12128): Elaborating entity "scr1_dmem_router" for hierarchy "scr1_top_ahb:
 Info (10264): Verilog HDL Case Statement information at scr1_dmem_router.sv(110): all case item expressions in this case statement are onehot File: D:/fpga_project/ALTERA/scr1-sdk/scr1/src/top/scr1_dmem_router.sv Line: 110
 Info (12128): Elaborating entity "scr1_imem_ahb" for hierarchy "scr1_top_ahb:i_scr1|scr1_imem_ahb:i_imem_ahb" File: D:/fpga_project/ALTERA/scr1-sdk/scr1/src/top/scr1_top_ahb.sv Line: 479
 Info (12128): Elaborating entity "scr1_dmem_ahb" for hierarchy "scr1_top_ahb:i_scr1|scr1_dmem_ahb:i_dmem_ahb" File: D:/fpga_project/ALTERA/scr1-sdk/scr1/src/top/scr1_top_ahb.sv Line: 509
-Info (12128): Elaborating entity "uart_top" for hierarchy "uart_top:i_uart" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 413
+Info (12128): Elaborating entity "ahb2wb" for hierarchy "ahb2wb:i_ahb2wb_imem" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 529
+Info (12128): Elaborating entity "wishbone_interconnect" for hierarchy "wishbone_interconnect:i_wb_interconnect" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 608
+Info (12128): Elaborating entity "bootloader_wb_slave2" for hierarchy "bootloader_wb_slave2:bootloader_slave_inst" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 630
+Info (12128): Elaborating entity "bootloader" for hierarchy "bootloader:bootloader_mem_inst" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 639
+Info (12128): Elaborating entity "altsyncram" for hierarchy "bootloader:bootloader_mem_inst|altsyncram:altsyncram_component" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/on chip ram/bootloader.v Line: 85
+Info (12130): Elaborated megafunction instantiation "bootloader:bootloader_mem_inst|altsyncram:altsyncram_component" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/on chip ram/bootloader.v Line: 85
+Info (12133): Instantiated megafunction "bootloader:bootloader_mem_inst|altsyncram:altsyncram_component" with the following parameter: File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/on chip ram/bootloader.v Line: 85
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_70o1.tdf
+Info (12128): Elaborating entity "altsyncram_70o1" for hierarchy "bootloader:bootloader_mem_inst|altsyncram:altsyncram_component|altsyncram_70o1:auto_generated" File: d:/programs/intelfpga_lite/17.1/quartus/libraries/megafunctions/altsyncram.tdf Line: 791
+Info (12128): Elaborating entity "gpio_top" for hierarchy "gpio_top:i_gpio" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 665
+Info (12128): Elaborating entity "uart_top" for hierarchy "uart_top:i_uart" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 695
 Info (10648): Verilog HDL Display System Task info at uart_top.v(327): (...|uart_top) UART INFO: Data bus width is 8. No Debug interface.\n File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/uart/uart_top.v Line: 327
 Info (10648): Verilog HDL Display System Task info at uart_top.v(334): (...|uart_top) UART INFO: Doesn't have baudrate output\n File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/uart/uart_top.v Line: 334
 Info (12128): Elaborating entity "uart_wb" for hierarchy "uart_top:i_uart|uart_wb:wb_interface" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/uart/uart_top.v Line: 245
@@ -353,17 +370,7 @@ Warning (10036): Verilog HDL or VHDL warning at uart_receiver.v(258): object "rc
 Warning (10230): Verilog HDL assignment warning at uart_receiver.v(463): truncated value with size 32 to match size of target (8) File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/uart/uart_receiver.v Line: 463
 Warning (10230): Verilog HDL assignment warning at uart_receiver.v(479): truncated value with size 32 to match size of target (10) File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/uart/uart_receiver.v Line: 479
 Info (12128): Elaborating entity "uart_rfifo" for hierarchy "uart_top:i_uart|uart_regs:regs|uart_receiver:receiver|uart_rfifo:fifo_rx" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/uart/uart_receiver.v Line: 254
-Info (12128): Elaborating entity "ahb2wb" for hierarchy "ahb2wb:i_ahb2wb_imem" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 505
-Info (12128): Elaborating entity "wishbone_interconnect" for hierarchy "wishbone_interconnect:i_wb_interconnect" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 576
-Info (12128): Elaborating entity "bootloader_wb_slave2" for hierarchy "bootloader_wb_slave2:bootloader_slave_inst" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 598
-Info (12128): Elaborating entity "bootloader" for hierarchy "bootloader:bootloader_mem_inst" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 607
-Info (12128): Elaborating entity "altsyncram" for hierarchy "bootloader:bootloader_mem_inst|altsyncram:altsyncram_component" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/on chip ram/bootloader.v Line: 85
-Info (12130): Elaborated megafunction instantiation "bootloader:bootloader_mem_inst|altsyncram:altsyncram_component" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/on chip ram/bootloader.v Line: 85
-Info (12133): Instantiated megafunction "bootloader:bootloader_mem_inst|altsyncram:altsyncram_component" with the following parameter: File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/on chip ram/bootloader.v Line: 85
-Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_70o1.tdf
-Info (12128): Elaborating entity "altsyncram_70o1" for hierarchy "bootloader:bootloader_mem_inst|altsyncram:altsyncram_component|altsyncram_70o1:auto_generated" File: d:/programs/intelfpga_lite/17.1/quartus/libraries/megafunctions/altsyncram.tdf Line: 791
-Info (12128): Elaborating entity "gpio_top" for hierarchy "gpio_top:i_gpio" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 633
-Info (12128): Elaborating entity "de10lite_sopc" for hierarchy "de10lite_sopc:i_soc" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 705
+Info (12128): Elaborating entity "de10lite_sopc" for hierarchy "de10lite_sopc:i_soc" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/de10lite_scr1.sv Line: 767
 Info (12128): Elaborating entity "altera_avalon_mm_bridge" for hierarchy "de10lite_sopc:i_soc|altera_avalon_mm_bridge:avl_dmem" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/de10lite_sopc.v Line: 216
 Info (12128): Elaborating entity "altera_avalon_mm_bridge" for hierarchy "de10lite_sopc:i_soc|altera_avalon_mm_bridge:avl_uart" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/de10lite_sopc.v Line: 284
 Info (12128): Elaborating entity "de10lite_sopc_bld_id" for hierarchy "de10lite_sopc:i_soc|de10lite_sopc_bld_id:bld_id" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/de10lite_sopc.v Line: 292
@@ -481,6 +488,11 @@ Info (12128): Elaborating entity "de10lite_sopc_mm_interconnect_0_avalon_st_adap
 Info (12128): Elaborating entity "altera_reset_controller" for hierarchy "de10lite_sopc:i_soc|altera_reset_controller:rst_controller" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/de10lite_sopc.v Line: 747
 Info (12128): Elaborating entity "altera_reset_synchronizer" for hierarchy "de10lite_sopc:i_soc|altera_reset_controller:rst_controller|altera_reset_synchronizer:alt_rst_sync_uq1" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/submodules/altera_reset_controller.v Line: 208
 Info (12128): Elaborating entity "altera_reset_synchronizer" for hierarchy "de10lite_sopc:i_soc|altera_reset_controller:rst_controller|altera_reset_synchronizer:alt_rst_req_sync_uq1" File: D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/db/ip/de10lite_sopc/submodules/altera_reset_controller.v Line: 220
+Warning (276020): Inferred RAM node "uart_top:i_uart|uart_regs:regs|uart_receiver:receiver|uart_rfifo:fifo_rx|raminfr:rfifo|ram_rtl_0" from synchronous design logic.  Pass-through logic has been added to match the read-during-write behavior of the original design.
+Warning (276020): Inferred RAM node "uart_top:i_uart|uart_regs:regs|uart_transmitter:transmitter|uart_tfifo:fifo_tx|raminfr:tfifo|ram_rtl_0" from synchronous design logic.  Pass-through logic has been added to match the read-during-write behavior of the original design.
+Info (12130): Elaborated megafunction instantiation "uart_top:i_uart|uart_regs:regs|uart_receiver:receiver|uart_rfifo:fifo_rx|raminfr:rfifo|altsyncram:ram_rtl_0"
+Info (12133): Instantiated megafunction "uart_top:i_uart|uart_regs:regs|uart_receiver:receiver|uart_rfifo:fifo_rx|raminfr:rfifo|altsyncram:ram_rtl_0" with the following parameter:
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_egi1.tdf
 Info (12130): Elaborated megafunction instantiation "scr1_top_ahb:i_scr1|scr1_tcm:i_tcm|scr1_dp_memory:i_dp_memory|altsyncram:memory_array_rtl_0"
 Info (12133): Instantiated megafunction "scr1_top_ahb:i_scr1|scr1_tcm:i_tcm|scr1_dp_memory:i_dp_memory|altsyncram:memory_array_rtl_0" with the following parameter:
 Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_vju1.tdf

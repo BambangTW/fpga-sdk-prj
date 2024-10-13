@@ -1,5 +1,5 @@
 Assembler report for de10lite_scr1
-Sat Oct 12 22:44:20 2024
+Sat Oct 12 23:05:37 2024
 Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 
 
@@ -37,7 +37,7 @@ refer to the applicable agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Sat Oct 12 22:44:20 2024 ;
+; Assembler Status      ; Successful - Sat Oct 12 23:05:37 2024 ;
 ; Revision Name         ; de10lite_scr1                         ;
 ; Top-level Entity Name ; de10lite_scr1                         ;
 ; Family                ; Cyclone V                             ;
@@ -66,8 +66,8 @@ refer to the applicable agreement for further details.
 +----------------+--------------------------------------------------------------------------------------+
 ; Option         ; Setting                                                                              ;
 +----------------+--------------------------------------------------------------------------------------+
-; JTAG usercode  ; 0x04FDFE9B                                                                           ;
-; Checksum       ; 0x04FDFE9B                                                                           ;
+; JTAG usercode  ; 0x0513EEC1                                                                           ;
+; Checksum       ; 0x0513EEC1                                                                           ;
 +----------------+--------------------------------------------------------------------------------------+
 
 
@@ -77,13 +77,13 @@ refer to the applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Assembler
     Info: Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
-    Info: Processing started: Sat Oct 12 22:44:08 2024
+    Info: Processing started: Sat Oct 12 23:05:30 2024
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off de10lite_scr1 -c de10lite_scr1
 Info (115030): Assembler is generating device programming files
 Info: Quartus Prime Assembler was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 4920 megabytes
-    Info: Processing ended: Sat Oct 12 22:44:20 2024
-    Info: Elapsed time: 00:00:12
-    Info: Total CPU time (on all processors): 00:00:06
+    Info: Peak virtual memory: 4922 megabytes
+    Info: Processing ended: Sat Oct 12 23:05:37 2024
+    Info: Elapsed time: 00:00:07
+    Info: Total CPU time (on all processors): 00:00:03
 
 

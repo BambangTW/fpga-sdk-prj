@@ -310,6 +310,19 @@ begin
 end
 
 //=======================================================
+//  PLL
+//=======================================================
+
+pll pll_inst (
+		.refclk   (MAX10_CLK2_50),   //  refclk.clk
+		.rst      (~soc_rst_n),      //   reset.reset
+		.outclk_0 (cpu_clk), // outclk0.clk
+		.outclk_1 (DRAM_CLK), // outclk1.clk
+		// .outclk_2 (outclk_2), // outclk2.clk
+		// .locked   (locked)    //  locked.export
+	);
+
+//=======================================================
 //  SCR1 Core's Processor Cluster
 //=======================================================
 scr1_top_ahb
@@ -687,9 +700,9 @@ uart_top i_uart (
 de10lite_sopc
 i_soc (
         // CLOCKs & RESETs
-        .osc_50_clk                 (MAX10_CLK2_50          ),
-        .cpu_clk_out_clk            (cpu_clk                ),
-        .sdram_clk_out_clk          (DRAM_CLK               ),
+        // .osc_50_clk                 (MAX10_CLK2_50          ),
+        // .cpu_clk_out_clk            (cpu_clk                ),
+        // .sdram_clk_out_clk          (DRAM_CLK               ),
         .pll_reset                  (1'b0                   ),
         .pwrup_rst_n_out_export     (pwrup_rst_n            ),
         .soc_reset_n                (soc_rst_n              ),

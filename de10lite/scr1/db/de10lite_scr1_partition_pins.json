@@ -84,6 +84,10 @@
 					"strict" : false
 				},
 				{
+					"name" : "UART_TXD",
+					"strict" : false
+				},
+				{
 					"name" : "DRAM_DQ[0]",
 					"strict" : false
 				},
@@ -169,6 +173,10 @@
 				},
 				{
 					"name" : "JTAG_TDI",
+					"strict" : false
+				},
+				{
+					"name" : "UART_RXD",
 					"strict" : false
 				}
 			]
