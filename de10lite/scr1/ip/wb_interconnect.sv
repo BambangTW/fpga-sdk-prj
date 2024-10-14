@@ -121,18 +121,22 @@ module wb_interconnect (
         endcase
     end
 
-    // Address decoding
+    // Updated Address decoding with master restrictions
     always_comb begin
         s0_sel = 1'b0;
         s1_sel = 1'b0;
 
         if (m_wbd_cyc_i && m_wbd_stb_i) begin
+            // Bootloader RAM accessible by both masters
             if (m_wbd_adr_i >= 32'hFFFF_0000 && m_wbd_adr_i <= 32'hFFFF_FFFF) begin
                 s0_sel = 1'b1; // Bootloader RAM
-            end else if (m_wbd_adr_i >= 32'hFF01_0000 && m_wbd_adr_i <= 32'hFF01_0FFF) begin
+            end 
+            // UART accessible only by DMEM (Master 1)
+            else if ((m_wbd_adr_i >= 32'hFF01_0000 && m_wbd_adr_i <= 32'hFF01_0FFF) && (current_master == MASTER_1)) begin
                 s1_sel = 1'b1; // UART
-            end else begin
-                // Default to error response
+            end 
+            else begin
+                // Default to error response (optional: handle as needed)
             end
         end
     end

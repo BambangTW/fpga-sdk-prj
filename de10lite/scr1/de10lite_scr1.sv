@@ -343,8 +343,8 @@ uart_top i_uart (
     .wb_clk_i       (cpu_clk                ),
     // Wishbone signals
     .wb_rst_i       (~soc_rst_n             ),
-    .wb_adr_i       (wb_uart_adr_i[4:2]     ),
-    .wb_dat_i       (wb_uart_dat_i[7:0]     ),
+    .wb_adr_i       (wb_uart_adr_i          ),
+    .wb_dat_i       (wb_uart_dat_i          ),
     .wb_dat_o       (uart_wb_dat            ),
     .wb_we_i        (wb_uart_we_i           ),
     .wb_stb_i       (wb_uart_stb_i          ),
@@ -504,17 +504,17 @@ de10lite_sopc i_soc (
     .pio_hex_3_2_export         (pio_hex_3_2            ),
     .pio_hex_5_4_export         (pio_hex_5_4            ),
     // PIO LEDs
-    .pio_led_export             (pio_led                ),
+    // .pio_led_export             (pio_led                ),
     // PIO SWITCHes
     .pio_sw_export              (pio_sw                 ),
     // UART
-    .uart_waitrequest           (uart_waitrequest       ),
-    .uart_readdata              (uart_readdata          ),
-    .uart_readdatavalid         (uart_readdatavalid     ),
-    .uart_writedata             (uart_writedata         ),
-    .uart_address               (uart_address           ),
-    .uart_write                 (uart_write             ),
-    .uart_read                  (uart_read              ),
+    // .uart_waitrequest           (uart_waitrequest       ),
+    // .uart_readdata              (uart_readdata          ),
+    // .uart_readdatavalid         (uart_readdatavalid     ),
+    // .uart_writedata             (uart_writedata         ),
+    // .uart_address               (uart_address           ),
+    // .uart_write                 (uart_write             ),
+    // .uart_read                  (uart_read              ),
     // PTFM IDs
     .soc_id_export              (FPGA_DE10_SOC_ID       ),
     .bld_id_export              (FPGA_DE10_BLD_ID       ),
@@ -531,6 +531,20 @@ assign scr1_jtag_tms        = JTAG_TMS;
 assign scr1_jtag_tdi        = JTAG_TDI;
 assign JTAG_TDO             = (scr1_jtag_tdo_en) ? scr1_jtag_tdo_int : 1'bZ;
 `endif // SCR1_DBG_EN
+
+//==========================================================
+// LEDs - Implementing Test Hooks
+//==========================================================
+
+// Assign LEDs based on Wishbone interconnect signals
+assign pio_led[0] = wb_imem_cyc_o;    // Master 0 (I-MEM) Active
+assign pio_led[1] = wb_dmem_cyc_o;    // Master 1 (D-MEM) Active
+assign pio_led[2] = wb_ram_cyc_o;     // Slave 0 (Bootloader RAM) Active
+assign pio_led[3] = wb_uart_cyc_i;    // Slave 1 (UART) Active
+assign pio_led[4] = wb_ram_ack_i;     // Slave 0 (Bootloader RAM) Acknowledge
+assign pio_led[5] = wb_uart_ack_o;    // Slave 1 (UART) Acknowledge
+assign pio_led[6] = uart_irq;         // UART Interrupt (IRQ[0])
+assign pio_led[7] = wb_ram_err_i; // Error Indicator
 
 //==========================================================
 // LEDs
