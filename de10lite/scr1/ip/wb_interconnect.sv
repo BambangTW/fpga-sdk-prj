@@ -47,10 +47,9 @@ module wb_interconnect (
     input  logic            s1_wbd_err_i
 );
 
-    // Address decoding for slaves
-    // Adjusted address map:
-    // 0x0000_0000 - 0x0FFF_FFFF : Bootloader RAM (Slave 0)
-    // 0x1000_0000 - 0x1000_00FF : UART (Slave 1)
+    // Address decoding for slaves based on the specified address ranges
+    // Bootloader RAM: 0xFFFF0000 - 0xFFFFFFFF (64 kB)
+    // UART: 0xFF010000 - 0xFF010FFF (4 kB)
 
     // Slave select signals
     logic s0_sel, s1_sel;
@@ -128,9 +127,9 @@ module wb_interconnect (
         s1_sel = 1'b0;
 
         if (m_wbd_cyc_i && m_wbd_stb_i) begin
-            if (m_wbd_adr_i >= 32'h0000_0000 && m_wbd_adr_i <= 32'h0FFF_FFFF) begin
+            if (m_wbd_adr_i >= 32'hFFFF_0000 && m_wbd_adr_i <= 32'hFFFF_FFFF) begin
                 s0_sel = 1'b1; // Bootloader RAM
-            end else if (m_wbd_adr_i >= 32'h1000_0000 && m_wbd_adr_i <= 32'h1000_00FF) begin
+            end else if (m_wbd_adr_i >= 32'hFF01_0000 && m_wbd_adr_i <= 32'hFF01_0FFF) begin
                 s1_sel = 1'b1; // UART
             end else begin
                 // Default to error response
