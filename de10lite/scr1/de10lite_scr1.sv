@@ -1,3 +1,8 @@
+/// Copyright by Syntacore LLC © 2016, 2017, 2021. See LICENSE for details
+/// @file       <de10lite_scr1.sv>
+/// @brief      Top-level entity with SCR1 for DE10-lite board
+///
+
 `include "scr1_arch_types.svh"
 `include "scr1_arch_description.svh"
 `include "scr1_memif.svh"
@@ -225,7 +230,7 @@ always_ff @(posedge cpu_clk, negedge hard_rst_n) begin
         rtc_counter     <= '0;
         tick_2Hz        <= 1'b0;
     end else begin
-        if (rtc_counter == '0') begin
+        if (rtc_counter == '0) begin
             rtc_counter <= (FPGA_DE10_CORE_CLK_FREQ/2);
             tick_2Hz    <= 1'b1;
         end else begin
