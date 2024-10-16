@@ -419,7 +419,7 @@ ahb_wishbone_bridge i_ahb_dmem (
 //=======================================================
 //  Wishbone Interconnect
 //=======================================================
-wb_interconnect i_wb_interconnect (
+wb_interconnect3 i_wb_interconnect (
     .clk_i          (cpu_clk                ),
     .rst_n          (soc_rst_n              ),
 
@@ -432,7 +432,7 @@ wb_interconnect i_wb_interconnect (
     .m0_wbd_stb_i   (wb_imem_stb_o          ),
     .m0_wbd_dat_o   (wb_imem_dat_i          ),
     .m0_wbd_ack_o   (wb_imem_ack_i          ),
-    .m0_wbd_err_o   (                       ),
+//    .m0_wbd_err_o   (                       ),
 
     // Master 1 Interface (D-MEM)
     .m1_wbd_dat_i   (wb_dmem_dat_o          ),
@@ -443,12 +443,12 @@ wb_interconnect i_wb_interconnect (
     .m1_wbd_stb_i   (wb_dmem_stb_o          ),
     .m1_wbd_dat_o   (wb_dmem_dat_i          ),
     .m1_wbd_ack_o   (wb_dmem_ack_i          ),
-    .m1_wbd_err_o   (                       ),
+//    .m1_wbd_err_o   (                       ),
 
     // Slave 0 Interface (Bootloader RAM)
     .s0_wbd_dat_i   (wb_ram_dat_i           ),
     .s0_wbd_ack_i   (wb_ram_ack_i           ),
-    .s0_wbd_err_i   (wb_ram_err_i           ),
+    // .s0_wbd_err_i   (wb_ram_err_i           ),
     .s0_wbd_dat_o   (wb_ram_dat_o           ),
     .s0_wbd_adr_o   (wb_ram_adr_o           ),
     .s0_wbd_sel_o   (wb_ram_sel_o           ),
@@ -459,7 +459,7 @@ wb_interconnect i_wb_interconnect (
     // Slave 1 Interface (UART)
     .s1_wbd_dat_i   (wb_uart_dat_o          ),
     .s1_wbd_ack_i   (wb_uart_ack_o          ),
-    .s1_wbd_err_i   (1'b0                   ),
+    // .s1_wbd_err_i   (1'b0                   ),
     .s1_wbd_dat_o   (wb_uart_dat_i          ),
     .s1_wbd_adr_o   (wb_uart_adr_i          ),
     .s1_wbd_sel_o   (wb_uart_sel_i          ),
@@ -471,19 +471,33 @@ wb_interconnect i_wb_interconnect (
 //=======================================================
 //  Instantiate the wb_bootloader_ram
 //=======================================================
-wb_bootloader_ram i_wb_bootloader_ram (
-    .wb_clk_i    (cpu_clk            ),
-    .wb_rst_i    (~soc_rst_n         ),
-    .wb_adr_i    (wb_ram_adr_o       ),
-    .wb_dat_i    (wb_ram_dat_o       ),
-    .wb_sel_i    (wb_ram_sel_o       ),
-    .wb_we_i     (wb_ram_we_o        ),
-    .wb_cyc_i    (wb_ram_cyc_o       ),
-    .wb_stb_i    (wb_ram_stb_o       ),
-    .wb_dat_o    (wb_ram_dat_i       ),
-    .wb_ack_o    (wb_ram_ack_i       ),
-    .wb_err_o    (wb_ram_err_i       )
-);
+ wb_bootloader_ram i_wb_bootloader_ram (
+     .wb_clk_i    (cpu_clk            ),
+     .wb_rst_i    (~soc_rst_n         ),
+     .wb_adr_i    (wb_ram_adr_o       ),
+     .wb_dat_i    (wb_ram_dat_o       ),
+     .wb_sel_i    (wb_ram_sel_o       ),
+     .wb_we_i     (wb_ram_we_o        ),
+     .wb_cyc_i    (wb_ram_cyc_o       ),
+     .wb_stb_i    (wb_ram_stb_o       ),
+     .wb_dat_o    (wb_ram_dat_i       ),
+     .wb_ack_o    (wb_ram_ack_i       ),
+     .wb_err_o    (wb_ram_err_i       )
+ );
+
+//=======================================================
+//  Instantiate the wishbone_bram_64 module (replace wb_bootloader_ram)
+//=======================================================
+//wishbone_bram_64 i_wishbone_bram_64 (
+//    .clk        (cpu_clk            ),         // Clock input
+//    .reset      (~soc_rst_n         ),      // Reset input, active low
+//    .wb_addr    (wb_ram_adr_o       ), // Address width matching 13 bits
+//    .wb_din     (wb_ram_dat_o       ),    // Data input from Wishbone
+//    .wb_dout    (wb_ram_dat_i       ),    // Data output to Wishbone
+//    .wb_we      (wb_ram_we_o        ),     // Write enable
+//    .wb_stb     (wb_ram_stb_o       ),    // Strobe signal
+//    .wb_ack     (wb_ram_ack_i       )     // Acknowledge signal
+//);
 
 //=======================================================
 //  FPGA Platform's System-on-Programmable-Chip (SOPC)

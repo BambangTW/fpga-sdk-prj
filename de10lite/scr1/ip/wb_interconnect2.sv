@@ -1,4 +1,4 @@
-module wb_interconnect (
+module wb_interconnect2 (
     input  logic            clk_i,
     input  logic            rst_n,
 
