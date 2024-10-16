@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module wb_stagging (
+module wb_stagging2 (
          input logic		clk_i, 
          input logic            rst_n,
          // WishBone Input master I/P

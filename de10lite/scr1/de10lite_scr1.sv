@@ -345,7 +345,7 @@ uart_top i_uart (
     .wb_rst_i       (~soc_rst_n             ),
     .wb_adr_i       (wb_uart_adr_i          ),
     .wb_dat_i       (wb_uart_dat_i          ),
-    .wb_dat_o       (uart_wb_dat            ),
+    .wb_dat_o       (wb_uart_dat_o          ),
     .wb_we_i        (wb_uart_we_i           ),
     .wb_stb_i       (wb_uart_stb_i          ),
     .wb_cyc_i       (wb_uart_cyc_i          ),
@@ -417,9 +417,10 @@ ahb_wishbone_bridge i_ahb_dmem (
 );
 
 //=======================================================
-//  Wishbone Interconnect
+//  Wishbone Interconnect (Replaced wb_interconnect3 with wb_interconnect4)
 //=======================================================
-wb_interconnect3 i_wb_interconnect (
+wb_interconnect4 i_wb_interconnect (
+    // System Clock and Reset
     .clk_i          (cpu_clk                ),
     .rst_n          (soc_rst_n              ),
 
@@ -432,7 +433,7 @@ wb_interconnect3 i_wb_interconnect (
     .m0_wbd_stb_i   (wb_imem_stb_o          ),
     .m0_wbd_dat_o   (wb_imem_dat_i          ),
     .m0_wbd_ack_o   (wb_imem_ack_i          ),
-//    .m0_wbd_err_o   (                       ),
+    .m0_wbd_err_o   (),                      // Not connected
 
     // Master 1 Interface (D-MEM)
     .m1_wbd_dat_i   (wb_dmem_dat_o          ),
@@ -443,12 +444,11 @@ wb_interconnect3 i_wb_interconnect (
     .m1_wbd_stb_i   (wb_dmem_stb_o          ),
     .m1_wbd_dat_o   (wb_dmem_dat_i          ),
     .m1_wbd_ack_o   (wb_dmem_ack_i          ),
-//    .m1_wbd_err_o   (                       ),
+    .m1_wbd_err_o   (),                      // Not connected
 
     // Slave 0 Interface (Bootloader RAM)
     .s0_wbd_dat_i   (wb_ram_dat_i           ),
     .s0_wbd_ack_i   (wb_ram_ack_i           ),
-    // .s0_wbd_err_i   (wb_ram_err_i           ),
     .s0_wbd_dat_o   (wb_ram_dat_o           ),
     .s0_wbd_adr_o   (wb_ram_adr_o           ),
     .s0_wbd_sel_o   (wb_ram_sel_o           ),
@@ -459,7 +459,6 @@ wb_interconnect3 i_wb_interconnect (
     // Slave 1 Interface (UART)
     .s1_wbd_dat_i   (wb_uart_dat_o          ),
     .s1_wbd_ack_i   (wb_uart_ack_o          ),
-    // .s1_wbd_err_i   (1'b0                   ),
     .s1_wbd_dat_o   (wb_uart_dat_i          ),
     .s1_wbd_adr_o   (wb_uart_adr_i          ),
     .s1_wbd_sel_o   (wb_uart_sel_i          ),
@@ -468,10 +467,39 @@ wb_interconnect3 i_wb_interconnect (
     .s1_wbd_stb_o   (wb_uart_stb_i          )
 );
 
+// **Important Changes:**
+//
+// 1. **Module Replacement:**
+//    - Replaced `wb_interconnect3` with `wb_interconnect4`.
+//
+// 2. **Port Connections:**
+//    - The `wb_interconnect4` module includes an additional output port `*_err_o` for each master.
+//    - In this example, the `*_err_o` ports are left unconnected by using `()`. If error handling is required, connect these to appropriate signals or tie them to a default value.
+//
+// 3. **Power Pins:**
+//    - The `wb_interconnect4` module has conditional power pins (`vccd1` and `vssd1`).
+//    - If your design uses power pins, ensure that `USE_POWER_PINS` is defined and connect them accordingly.
+//    - In this example, it's assumed that power pins are not used, so no connections are made.
+//
+// 4. **Error Signals:**
+//    - Since `wb_interconnect4` introduces error signals (`m0_wbd_err_o`, `m1_wbd_err_o`, etc.), decide how to handle them.
+//    - In this replacement, they are left unconnected. If you wish to monitor or handle errors, connect these ports to appropriate logic in your design.
+//
+// **Example Handling of Error Signals (Optional):**
+// If you want to monitor error signals, you can modify the instantiation as follows:
+//
+// ```systemverilog
+// .m0_wbd_err_o   (wb_imem_err_i          ),
+// .m1_wbd_err_o   (wb_dmem_err_i          ),
+// ```
+//
+// Then, declare `wb_imem_err_i` and `wb_dmem_err_i` in your signal declarations and handle them as needed.
+
+
 //=======================================================
 //  Instantiate the wb_bootloader_ram
 //=======================================================
- wb_bootloader_ram i_wb_bootloader_ram (
+wb_bootloader_ram i_wb_bootloader_ram (
      .wb_clk_i    (cpu_clk            ),
      .wb_rst_i    (~soc_rst_n         ),
      .wb_adr_i    (wb_ram_adr_o       ),
@@ -558,7 +586,7 @@ assign pio_led[3] = wb_uart_cyc_i;    // Slave 1 (UART) Active
 assign pio_led[4] = wb_ram_ack_i;     // Slave 0 (Bootloader RAM) Acknowledge
 assign pio_led[5] = wb_uart_ack_o;    // Slave 1 (UART) Acknowledge
 assign pio_led[6] = uart_irq;         // UART Interrupt (IRQ[0])
-assign pio_led[7] = wb_ram_err_i; // Error Indicator
+assign pio_led[7] = wb_ram_err_i;     // Error Indicator
 
 //==========================================================
 // LEDs

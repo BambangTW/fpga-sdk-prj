@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module wb_arb3(clk, rstn, req, gnt);
+module wb_arb(clk, rstn, req, gnt);
 
 input       clk;
 input       rstn;

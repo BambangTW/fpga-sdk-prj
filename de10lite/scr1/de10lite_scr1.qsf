@@ -469,6 +469,8 @@ set_global_assignment -name PARTITION_COLOR 16764057 -entity DE1_SCR1 -section_i
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -entity DE1_SCR1 -section_id Top
 set_location_assignment PIN_Y17 -to UART_TXD
 set_location_assignment PIN_Y18 -to UART_RXD
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (SystemVerilog)"
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_id eda_simulation
 set_global_assignment -name SYSTEMVERILOG_FILE de10lite_scr1.sv
 set_global_assignment -name SDC_FILE de10lite_scr1.sdc
 set_global_assignment -name SYSTEMVERILOG_FILE ../../../scr1/src/core/pipeline/scr1_pipe_ifu.sv
@@ -517,11 +519,12 @@ set_global_assignment -name QIP_FILE ip/ram/bootloader_ram.qip
 set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_interconnect.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_interconnect2.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_interconnect3.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_interconnect4.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_arb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_arb2.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_arb3.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_stagging.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ip/wb_stagging2.sv
 set_global_assignment -name QIP_FILE ip/ram/bootloader_ram_64/bootloader_ram_64.qip
 set_global_assignment -name SYSTEMVERILOG_FILE ip/wishbone_bram_64.sv
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (SystemVerilog)"
-set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_id eda_simulation
