@@ -324,20 +324,20 @@ assign scr1_irq = uart_irq;
 //==========================================================
 // UART 16550 IP
 //==========================================================
-always_ff @(posedge cpu_clk, negedge soc_rst_n)
-    if (~soc_rst_n)
-        uart_read_vd <= '0;
-    else if (uart_wb_ack)
-        uart_read_vd <= '0;
-    else if (uart_read)
-        uart_read_vd <= '1;
-
-always_ff @(posedge cpu_clk) begin
-    uart_readdatavalid  <= uart_wb_ack & uart_read_vd;
-    uart_readdata       <= {24'd0, uart_wb_dat};
-end
-
-assign uart_waitrequest = ~uart_wb_ack;
+//always_ff @(posedge cpu_clk, negedge soc_rst_n)
+//    if (~soc_rst_n)
+//        uart_read_vd <= '0;
+//    else if (uart_wb_ack)
+//        uart_read_vd <= '0;
+//    else if (uart_read)
+//        uart_read_vd <= '1;
+//
+//always_ff @(posedge cpu_clk) begin
+//    uart_readdatavalid  <= uart_wb_ack & uart_read_vd;
+//    uart_readdata       <= {24'd0, uart_wb_dat};
+//end
+//
+//assign uart_waitrequest = ~uart_wb_ack;
 
 uart_top i_uart (
     .wb_clk_i       (cpu_clk                ),
