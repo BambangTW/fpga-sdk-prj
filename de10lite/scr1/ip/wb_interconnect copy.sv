@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module wb_interconnect4(
+module wb_interconnect(
     `ifdef USE_POWER_PINS
         input logic vccd1,    // User area 1 1.8V supply
         input logic vssd1,    // User area 1 digital ground
@@ -175,7 +175,7 @@ assign s1_wb_rd.wbd_err  = 1'b0;
 //-------------------------------------------------------------------
 logic [1:0] gnt;
 
-wb_arb3 u_wb_arb (
+wb_arb u_wb_arb (
     .clk(clk_i), 
     .rstn(rst_n),
     .req({ m1_wbd_stb_i & !m1_wbd_ack_o,
@@ -222,7 +222,7 @@ assign m1_wb_rd = (gnt == 2'b01) ? m_bus_rd : 'h0;
 //-------------------------------------------------------------------
 // Staging Module Instantiation
 //-------------------------------------------------------------------
-wb_stagging2 u_wb_stage (
+wb_stagging u_wb_stage (
     .clk_i       (clk_i), 
     .rst_n       (rst_n),
     .m_wbd_dat_i (m_bus_wr.wbd_dat),

@@ -1,43 +1,43 @@
 module wb_arb(
-    input        clk,
-    input        rstn,
-    input  [1:0] req,  // Request inputs for Master 1 and Master 0
-    output [1:0] gnt   // Grant outputs for Master 1 and Master 0
+    input  logic        clk,
+    input  logic        rstn,
+    input  logic [1:0]  req,  // Request signals from masters
+    output logic [1:0]  gnt   // Grant signals to masters
 );
 
-    // Round-Robin Arbitration Logic
-    typedef enum logic [1:0] {
-        MASTER_0 = 2'd0,
-        MASTER_1 = 2'd1
-    } master_sel_t;
-
-    master_sel_t current_grant;
+    // Internal registers
+    logic [1:0] state;
+    logic [1:0] next_state;
 
     always_ff @(posedge clk or negedge rstn) begin
-        if (!rstn) begin
-            current_grant <= MASTER_0;
-        end else begin
-            case (current_grant)
-                MASTER_0: begin
-                    if (req[1]) begin
-                        current_grant <= MASTER_1;
-                    end else if (req[0]) begin
-                        current_grant <= MASTER_0;
-                    end
-                end
-                MASTER_1: begin
-                    if (req[0]) begin
-                        current_grant <= MASTER_0;
-                    end else if (req[1]) begin
-                        current_grant <= MASTER_1;
-                    end
-                end
-                default: current_grant <= MASTER_0;
-            endcase
-        end
+        if (!rstn)
+            state <= 2'b01; // Start with Master 0
+        else
+            state <= next_state;
     end
 
-    // Grant signals
-    assign gnt = (current_grant == MASTER_0) ? 2'd1 : 2'd2;
+    always_comb begin
+        case (state)
+            2'b01: begin // Master 0 has the grant
+                if (req[0])
+                    next_state = 2'b01; // Stay with Master 0
+                else if (req[1])
+                    next_state = 2'b10; // Grant to Master 1
+                else
+                    next_state = 2'b01; // Default to Master 0
+            end
+            2'b10: begin // Master 1 has the grant
+                if (req[1])
+                    next_state = 2'b10; // Stay with Master 1
+                else if (req[0])
+                    next_state = 2'b01; // Grant to Master 0
+                else
+                    next_state = 2'b10; // Default to Master 1
+            end
+            default: next_state = 2'b01; // Default to Master 0
+        endcase
+    end
+
+    assign gnt = next_state;
 
 endmodule

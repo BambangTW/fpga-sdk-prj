@@ -49,8 +49,9 @@ module wb_interconnect (
     logic [1:0]          gnt;           // Grant signals from arbiter
     logic [1:0]          req;           // Request signals to arbiter
 
-    // Master request signals
+    // Master 0 signals
     wire                 m0_req = m0_wbd_cyc_i & m0_wbd_stb_i & ~m0_wbd_ack_o;
+    // Master 1 signals
     wire                 m1_req = m1_wbd_cyc_i & m1_wbd_stb_i & ~m1_wbd_ack_o;
 
     assign req = {m1_req, m0_req};
@@ -63,37 +64,16 @@ module wb_interconnect (
         .gnt  (gnt)
     );
 
-    // Internal master-slave signals
+    // Master multiplexing
     logic [31:0] m_wbd_dat_i;
     logic [31:0] m_wbd_adr_i;
     logic [3:0]  m_wbd_sel_i;
     logic        m_wbd_we_i;
     logic        m_wbd_cyc_i;
     logic        m_wbd_stb_i;
-
-    logic [31:0] m0_dat_o;
-    logic        m0_ack_o;
-    logic        m0_err_o;
-
-    logic [31:0] m1_dat_o;
-    logic        m1_ack_o;
-    logic        m1_err_o;
-
     logic [31:0] m_wbd_dat_o;
     logic        m_wbd_ack_o;
     logic        m_wbd_err_o;
-
-    // Assign outputs to masters
-    assign m0_wbd_dat_o = m0_dat_o;
-    assign m0_wbd_ack_o = m0_ack_o;
-    assign m0_wbd_err_o = m0_err_o;
-
-    assign m1_wbd_dat_o = m1_dat_o;
-    assign m1_wbd_ack_o = m1_ack_o;
-    assign m1_wbd_err_o = m1_err_o;
-
-    // Master Multiplexing
-    logic [1:0] current_master;
 
     always_comb begin
         // Default assignments
@@ -103,49 +83,49 @@ module wb_interconnect (
         m_wbd_we_i   = 1'b0;
         m_wbd_cyc_i  = 1'b0;
         m_wbd_stb_i  = 1'b0;
-
-        m0_dat_o     = 32'b0;
-        m0_ack_o     = 1'b0;
-        m0_err_o     = 1'b0;
-        m1_dat_o     = 32'b0;
-        m1_ack_o     = 1'b0;
-        m1_err_o     = 1'b0;
-
-        current_master = 2'b00;
+        m_wbd_dat_o  = 32'b0;
+        m_wbd_ack_o  = 1'b0;
+        m_wbd_err_o  = 1'b0;
 
         case (gnt)
             2'b01: begin // Grant to Master 0
-                current_master = 2'b01;
                 m_wbd_dat_i = m0_wbd_dat_i;
                 m_wbd_adr_i = m0_wbd_adr_i;
                 m_wbd_sel_i = m0_wbd_sel_i;
                 m_wbd_we_i  = m0_wbd_we_i;
                 m_wbd_cyc_i = m0_wbd_cyc_i;
                 m_wbd_stb_i = m0_wbd_stb_i;
+                m0_wbd_dat_o = m_wbd_dat_o;
+                m0_wbd_ack_o = m_wbd_ack_o;
+                m0_wbd_err_o = m_wbd_err_o;
             end
             2'b10: begin // Grant to Master 1
-                current_master = 2'b10;
                 m_wbd_dat_i = m1_wbd_dat_i;
                 m_wbd_adr_i = m1_wbd_adr_i;
                 m_wbd_sel_i = m1_wbd_sel_i;
                 m_wbd_we_i  = m1_wbd_we_i;
                 m_wbd_cyc_i = m1_wbd_cyc_i;
                 m_wbd_stb_i = m1_wbd_stb_i;
+                m1_wbd_dat_o = m_wbd_dat_o;
+                m1_wbd_ack_o = m_wbd_ack_o;
+                m1_wbd_err_o = m_wbd_err_o;
             end
             default: begin
-                // No grant; outputs remain at default values
+                // No grant
             end
         endcase
     end
 
     // Address decoding to select the slave
-    logic s0_selected;
-    logic s1_selected;
+    // For simplicity, we'll assume:
+    // Addresses starting with 0x0000_0000 - 0x7FFF_FFFF go to Slave 0
+    // Addresses starting with 0x8000_0000 - 0xFFFF_FFFF go to Slave 1
 
-    assign s0_selected = ((m_wbd_adr_i[31:26] == 6'b000000) || (m_wbd_adr_i[31:16] == 16'hFFFF));
-    assign s1_selected = ((m_wbd_adr_i[31:24] == 8'hFF) && (m_wbd_adr_i[31:16] != 16'hFFFF));
+    logic s0_selected = (m_wbd_adr_i[31] == 1'b0);
+    logic s1_selected = (m_wbd_adr_i[31] == 1'b1);
 
     // Connect master to slaves
+    // Slave 0
     assign s0_wbd_dat_o = m_wbd_dat_i;
     assign s0_wbd_adr_o = m_wbd_adr_i;
     assign s0_wbd_sel_o = m_wbd_sel_i;
@@ -153,6 +133,7 @@ module wb_interconnect (
     assign s0_wbd_cyc_o = m_wbd_cyc_i & s0_selected;
     assign s0_wbd_stb_o = m_wbd_stb_i & s0_selected;
 
+    // Slave 1
     assign s1_wbd_dat_o = m_wbd_dat_i;
     assign s1_wbd_adr_o = m_wbd_adr_i;
     assign s1_wbd_sel_o = m_wbd_sel_i;
@@ -162,52 +143,18 @@ module wb_interconnect (
 
     // Slave responses back to master
     always_comb begin
-        // Default assignments
         m_wbd_dat_o = 32'b0;
         m_wbd_ack_o = 1'b0;
         m_wbd_err_o = 1'b0;
-        logic access_allowed = 1'b0;
 
-        // Determine if access is allowed based on current master and address
-        if (current_master == 2'b01) begin
-            // Master 0: Can access only Slave 0
-            access_allowed = ((m_wbd_adr_i[31:26] == 6'b000000) || (m_wbd_adr_i[31:16] == 16'hFFFF));
-        end else if (current_master == 2'b10) begin
-            // Master 1: Can access both Slave 0 and Slave 1
-            access_allowed = ((m_wbd_adr_i[31:26] == 6'b000000) || // SDRAM
-                              (m_wbd_adr_i[31:16] == 16'hFFFF) || // On-chip SRAM
-                              ((m_wbd_adr_i[31:24] == 8'hFF) && (m_wbd_adr_i[31:16] != 16'hFFFF))); // Peripherals
+        if (s0_selected) begin
+            m_wbd_dat_o = s0_wbd_dat_i;
+            m_wbd_ack_o = s0_wbd_ack_i;
+        end else if (s1_selected) begin
+            m_wbd_dat_o = s1_wbd_dat_i;
+            m_wbd_ack_o = s1_wbd_ack_i;
         end else begin
-            access_allowed = 1'b0;
-        end
-
-        if (access_allowed) begin
-            if (s0_selected) begin
-                m_wbd_dat_o = s0_wbd_dat_i;
-                m_wbd_ack_o = s0_wbd_ack_i;
-            end else if (s1_selected) begin
-                m_wbd_dat_o = s1_wbd_dat_i;
-                m_wbd_ack_o = s1_wbd_ack_i;
-            end else begin
-                // Address not mapped to any slave
-                m_wbd_err_o = 1'b1;
-                m_wbd_ack_o = 1'b1;
-            end
-        end else begin
-            // Access not allowed
-            m_wbd_err_o = 1'b1;
-            m_wbd_ack_o = 1'b1;
-        end
-
-        // Return response to the current master
-        if (current_master == 2'b01) begin
-            m0_dat_o = m_wbd_dat_o;
-            m0_ack_o = m_wbd_ack_o;
-            m0_err_o = m_wbd_err_o;
-        end else if (current_master == 2'b10) begin
-            m1_dat_o = m_wbd_dat_o;
-            m1_ack_o = m_wbd_ack_o;
-            m1_err_o = m_wbd_err_o;
+            m_wbd_err_o = 1'b1; // Invalid address
         end
     end
 
