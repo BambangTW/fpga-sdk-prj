@@ -1,0 +1,142 @@
+// =============================================================================
+// Module:      wishbone_slave_to_avalon_master_bridge
+// Description: Bridges Wishbone Slave interface to Avalon Master interface,
+//              handling byte enables and other advanced features.
+// =============================================================================
+
+module wishbone_slave_to_avalon_master_bridge (
+    // Clock and Reset
+    input  wire         clk,
+    input  wire         reset_n,
+
+    // Wishbone Slave Interface
+    input  wire [31:0]  wb_adr_i,
+    input  wire [31:0]  wb_dat_i,
+    input  wire [3:0]   wb_sel_i,
+    input  wire         wb_we_i,
+    input  wire         wb_cyc_i,
+    input  wire         wb_stb_i,
+    output reg  [31:0]  wb_dat_o,
+    output reg          wb_ack_o,
+    output reg          wb_err_o,
+
+    // Avalon Master Interface
+    output reg  [31:0]  av_address,
+    output reg          av_write,
+    output reg          av_read,
+    output reg  [31:0]  av_writedata,
+    output reg  [3:0]   av_byteenable,
+    input  wire [31:0]  av_readdata,
+    input  wire         av_waitrequest,
+    input  wire         av_readdatavalid,
+    input  wire         av_response // Assuming single-bit response: 0 for OK, 1 for error
+);
+
+    // State Encoding
+    localparam STATE_IDLE  = 2'd0;
+    localparam STATE_WRITE = 2'd1;
+    localparam STATE_READ  = 2'd2;
+    localparam STATE_WAIT  = 2'd3;
+
+    reg [1:0]  state, next_state;
+    reg [31:0] wb_adr_reg;
+    reg [31:0] wb_dat_reg;
+    reg [3:0]  wb_sel_reg;
+    reg        wb_we_reg;
+
+    // State Machine Sequential Logic
+    always @(posedge clk or negedge reset_n) begin
+        if (!reset_n) begin
+            state <= STATE_IDLE;
+            wb_adr_reg <= 32'h0;
+            wb_dat_reg <= 32'h0;
+            wb_sel_reg <= 4'b0000;
+            wb_we_reg  <= 1'b0;
+            wb_ack_o   <= 1'b0;
+            wb_err_o   <= 1'b0;
+            wb_dat_o   <= 32'h0;
+        end else begin
+            state <= next_state;
+            if (wb_cyc_i && wb_stb_i && (state == STATE_IDLE)) begin
+                wb_adr_reg <= wb_adr_i;
+                wb_dat_reg <= wb_dat_i;
+                wb_sel_reg <= wb_sel_i;
+                wb_we_reg  <= wb_we_i;
+            end
+        end
+    end
+
+    // State Machine Combinational Logic
+    always @(*) begin
+        // Default Assignments
+        next_state     = state;
+        av_address     = 32'h0;
+        av_write       = 1'b0;
+        av_read        = 1'b0;
+        av_writedata   = 32'h0;
+        av_byteenable  = 4'b0000;
+        wb_ack_o       = 1'b0;
+        wb_err_o       = 1'b0;
+        wb_dat_o       = 32'h0;
+
+        case (state)
+            STATE_IDLE: begin
+                if (wb_cyc_i && wb_stb_i) begin
+                    av_address    = wb_adr_i;
+                    av_byteenable = wb_sel_i;
+                    if (wb_we_i) begin
+                        av_write     = 1'b1;
+                        av_writedata = wb_dat_i;
+                        if (!av_waitrequest) begin
+                            next_state = STATE_WAIT;
+                        end else begin
+                            next_state = STATE_WRITE;
+                        end
+                    end else begin
+                        av_read = 1'b1;
+                        if (!av_waitrequest) begin
+                            next_state = STATE_WAIT;
+                        end else begin
+                            next_state = STATE_READ;
+                        end
+                    end
+                end
+            end
+
+            STATE_WRITE: begin
+                av_address    = wb_adr_reg;
+                av_byteenable = wb_sel_reg;
+                av_write      = 1'b1;
+                av_writedata  = wb_dat_reg;
+                if (!av_waitrequest) begin
+                    next_state = STATE_WAIT;
+                end
+            end
+
+            STATE_READ: begin
+                av_address    = wb_adr_reg;
+                av_byteenable = wb_sel_reg;
+                av_read       = 1'b1;
+                if (!av_waitrequest) begin
+                    next_state = STATE_WAIT;
+                end
+            end
+
+            STATE_WAIT: begin
+                if ((wb_we_reg && !av_waitrequest) || (!wb_we_reg && av_readdatavalid)) begin
+                    wb_ack_o = 1'b1;
+                    wb_err_o = av_response;
+                    if (!wb_we_reg) begin
+                        wb_dat_o = av_readdata;
+                    end
+                    next_state = STATE_IDLE;
+                end
+            end
+
+            default: begin
+                next_state = STATE_IDLE;
+            end
+        endcase
+    end
+
+endmodule

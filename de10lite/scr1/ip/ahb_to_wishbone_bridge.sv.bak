@@ -1,0 +1,166 @@
+// =============================================================================
+// Module:      ahb_slave_to_wishbone_master_bridge
+// Description: Bridges AHB-Lite Slave interface to Wishbone Master interface,
+//              handling byte enables and other advanced features.
+// =============================================================================
+
+module ahb_slave_to_wishbone_master_bridge (
+    // Clock and Reset
+    input  wire         HCLK,
+    input  wire         HRESETn,
+
+    // AHB-Lite Slave Interface
+    input  wire [31:0]  HADDR,
+    input  wire [31:0]  HWDATA,
+    input  wire         HWRITE,
+    input  wire [2:0]   HSIZE,
+    input  wire [1:0]   HTRANS,
+    input  wire         HSEL,
+    input  wire         HREADY,
+    output reg  [31:0]  HRDATA,
+    output reg          HREADYOUT,
+    output reg          HRESP,
+
+    // Wishbone Master Interface
+    output reg  [31:0]  wb_adr_o,
+    output reg  [31:0]  wb_dat_o,
+    output reg  [3:0]   wb_sel_o,
+    output reg          wb_we_o,
+    output reg          wb_cyc_o,
+    output reg          wb_stb_o,
+    input  wire [31:0]  wb_dat_i,
+    input  wire         wb_ack_i,
+    input  wire         wb_err_i
+);
+
+    // AHB Transfer Types
+    localparam HTRANS_IDLE   = 2'b00;
+    localparam HTRANS_BUSY   = 2'b01;
+    localparam HTRANS_NONSEQ = 2'b10;
+    localparam HTRANS_SEQ    = 2'b11;
+
+    // Internal Registers
+    reg [1:0]  state, next_state;
+    reg [31:0] addr_reg;
+    reg        write_reg;
+    reg [2:0]  size_reg;
+    reg [31:0] wdata_reg;
+
+    // Byte Enable Calculation Function
+    function [3:0] get_byte_enable(input [2:0] size, input [1:0] addr);
+        case (size)
+            3'b000: // Byte (8-bit)
+                case (addr)
+                    2'b00: get_byte_enable = 4'b0001;
+                    2'b01: get_byte_enable = 4'b0010;
+                    2'b10: get_byte_enable = 4'b0100;
+                    2'b11: get_byte_enable = 4'b1000;
+                endcase
+            3'b001: // Halfword (16-bit)
+                case (addr[1])
+                    1'b0: get_byte_enable = 4'b0011;
+                    1'b1: get_byte_enable = 4'b1100;
+                endcase
+            3'b010: // Word (32-bit)
+                get_byte_enable = 4'b1111;
+            default:
+                get_byte_enable = 4'b0000; // Unsupported size
+        endcase
+    endfunction
+
+    // State Encoding
+    localparam STATE_IDLE  = 2'd0;
+    localparam STATE_WRITE = 2'd1;
+    localparam STATE_READ  = 2'd2;
+
+    // State Machine Sequential Logic
+    always @(posedge HCLK or negedge HRESETn) begin
+        if (!HRESETn) begin
+            state <= STATE_IDLE;
+            addr_reg <= 32'h0;
+            write_reg <= 1'b0;
+            size_reg <= 3'b0;
+            wdata_reg <= 32'h0;
+        end else begin
+            state <= next_state;
+            if (HREADY && HSEL && (HTRANS != HTRANS_IDLE) && (HTRANS != HTRANS_BUSY)) begin
+                addr_reg  <= HADDR;
+                write_reg <= HWRITE;
+                size_reg  <= HSIZE;
+                wdata_reg <= HWDATA;
+            end
+        end
+    end
+
+    // State Machine Combinational Logic
+    always @(*) begin
+        // Default Assignments
+        next_state   = state;
+        wb_cyc_o     = 1'b0;
+        wb_stb_o     = 1'b0;
+        wb_we_o      = 1'b0;
+        wb_adr_o     = 32'h0;
+        wb_dat_o     = 32'h0;
+        wb_sel_o     = 4'b0000;
+        HREADYOUT    = 1'b1;
+        HRESP        = 1'b0;
+        HRDATA       = 32'h0;
+
+        case (state)
+            STATE_IDLE: begin
+                if (HREADY && HSEL && (HTRANS == HTRANS_NONSEQ || HTRANS == HTRANS_SEQ)) begin
+                    wb_cyc_o = 1'b1;
+                    wb_stb_o = 1'b1;
+                    wb_adr_o = HADDR;
+                    wb_sel_o = get_byte_enable(HSIZE, HADDR[1:0]);
+                    if (HWRITE) begin
+                        wb_we_o  = 1'b1;
+                        wb_dat_o = HWDATA;
+                        next_state = STATE_WRITE;
+                        HREADYOUT = 1'b0;
+                    end else begin
+                        next_state = STATE_READ;
+                        HREADYOUT = 1'b0;
+                    end
+                end
+            end
+
+            STATE_WRITE: begin
+                wb_cyc_o = 1'b1;
+                wb_stb_o = 1'b1;
+                wb_we_o  = 1'b1;
+                wb_adr_o = addr_reg;
+                wb_dat_o = wdata_reg;
+                wb_sel_o = get_byte_enable(size_reg, addr_reg[1:0]);
+                if (wb_ack_i || wb_err_i) begin
+                    next_state = STATE_IDLE;
+                    HREADYOUT = 1'b1;
+                    HRESP     = wb_err_i;
+                end else begin
+                    HREADYOUT = 1'b0;
+                end
+            end
+
+            STATE_READ: begin
+                wb_cyc_o = 1'b1;
+                wb_stb_o = 1'b1;
+                wb_we_o  = 1'b0;
+                wb_adr_o = addr_reg;
+                wb_sel_o = get_byte_enable(size_reg, addr_reg[1:0]);
+                if (wb_ack_i || wb_err_i) begin
+                    HRDATA    = wb_dat_i;
+                    next_state = STATE_IDLE;
+                    HREADYOUT = 1'b1;
+                    HRESP     = wb_err_i;
+                end else begin
+                    HREADYOUT = 1'b0;
+                end
+            end
+
+            default: begin
+                next_state = STATE_IDLE;
+            end
+        endcase
+    end
+
+endmodule

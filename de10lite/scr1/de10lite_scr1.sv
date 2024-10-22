@@ -163,6 +163,28 @@ logic [31:0]                        rtc_counter;
 logic                               tick_2Hz;
 logic                               heartbeat;
 
+// --- AHB to Wishbone Bridge - IMEM --------------------
+logic [31:0]                        wb_imem_adr_o;
+logic [31:0]                        wb_imem_dat_o;
+logic [3:0]                         wb_imem_sel_o;
+logic                               wb_imem_we_o;
+logic                               wb_imem_cyc_o;
+logic                               wb_imem_stb_o;
+logic [31:0]                        wb_imem_dat_i;
+logic                               wb_imem_ack_i;
+logic                               wb_imem_err_i;
+
+// --- AHB to Wishbone Bridge - DMEM --------------------
+logic [31:0]                        wb_dmem_adr_o;
+logic [31:0]                        wb_dmem_dat_o;
+logic [3:0]                         wb_dmem_sel_o;
+logic                               wb_dmem_we_o;
+logic                               wb_dmem_cyc_o;
+logic                               wb_dmem_stb_o;
+logic [31:0]                        wb_dmem_dat_i;
+logic                               wb_dmem_ack_i;
+logic                               wb_dmem_err_i;
+
 //=======================================================
 //  Resets
 //=======================================================
@@ -365,32 +387,162 @@ i_uart(
 );
 
 //==========================================================
+// AHB SPLITTER IMEM 
+// using Arbiter with MUX and DEMUX
+//==========================================================
+
+// AHB-to-Avalon bridge 1 (for Bus 1)
+logic [31:0] ahb_imem_haddr1;
+logic [31:0] ahb_imem_hwdata1;
+logic [2:0]  ahb_imem_hsize1;
+logic [1:0]  ahb_imem_htrans1;
+logic [3:0]  ahb_imem_hprot1;
+logic        ahb_imem_hwrite1;
+logic [31:0] ahb_imem_hrdata1;
+logic        ahb_imem_hresp1;
+logic        ahb_imem_hready1;
+
+// AHB-to-Avalon bridge 2 (for Bus 2)
+logic [31:0] ahb_imem_haddr2;
+logic [31:0] ahb_imem_hwdata2;
+logic [2:0]  ahb_imem_hsize2;
+logic [1:0]  ahb_imem_htrans2;
+logic [3:0]  ahb_imem_hprot2;
+logic        ahb_imem_hwrite2;
+logic [31:0] ahb_imem_hrdata2;
+logic        ahb_imem_hresp2;
+logic        ahb_imem_hready2;
+
+ahb_splitter i_ahb_splitter_IMEM (
+    .clk          (cpu_clk),        // Clock from the SCR1 core
+    .rst_n        (soc_rst_n),      // Reset signal
+
+    // SCR1 AHB Master interface
+    .HADDR        (ahb_imem_haddr),      // AHB address
+    .HWDATA       ('0),     // AHB write data
+    .HSIZE        (ahb_imem_hsize),      // AHB size
+    .HTRANS       (ahb_imem_htrans),     // AHB transfer type
+    .HPROT        (ahb_imem_hprot),      // AHB protection control
+    .HWRITE       ('0),     // AHB write enable
+    .HRDATA       (ahb_imem_hrdata),     // AHB read data
+    .HRESP        (ahb_imem_hresp),      // AHB response
+    .HREADY       (ahb_imem_hready),     // AHB ready
+
+    // AHB bus 1 (connected to AHB-to-Avalon bridge 1)
+    .HADDR1       (ahb_imem_haddr1),
+    .HWDATA1      (ahb_imem_hwdata1),
+    .HSIZE1       (ahb_imem_hsize1),
+    .HTRANS1      (ahb_imem_htrans1),
+    .HPROT1       (ahb_imem_hprot1),
+    .HWRITE1      (ahb_imem_hwrite1),
+    .HRDATA1      (ahb_imem_hrdata1),
+    .HRESP1       (ahb_imem_hresp1),
+    .HREADY1      (ahb_imem_hready1),
+
+    // AHB bus 2 (connected to AHB-to-Avalon bridge 2)
+    .HADDR2       (ahb_imem_haddr2),
+    .HWDATA2      (ahb_imem_hwdata2),
+    .HSIZE2       (ahb_imem_hsize2),
+    .HTRANS2      (ahb_imem_htrans2),
+    .HPROT2       (ahb_imem_hprot2),
+    .HWRITE2      (ahb_imem_hwrite2),
+    .HRDATA2      (ahb_imem_hrdata2),
+    .HRESP2       (ahb_imem_hresp2),
+    .HREADY2      (ahb_imem_hready2)
+);
+
+//==========================================================
+// AHB SPLITTER DMEM 
+// using Arbiter with MUX and DEMUX
+//==========================================================
+
+// AHB-to-Avalon bridge 1 (for Bus 1)
+logic [31:0] ahb_dmem_haddr1;
+logic [31:0] ahb_dmem_hwdata1;
+logic [2:0]  ahb_dmem_hsize1;
+logic [1:0]  ahb_dmem_htrans1;
+logic [3:0]  ahb_dmem_hprot1;
+logic        ahb_dmem_hwrite1;
+logic [31:0] ahb_dmem_hrdata1;
+logic        ahb_dmem_hresp1;
+logic        ahb_dmem_hready1;
+
+// AHB-to-Avalon bridge 2 (for Bus 2)
+logic [31:0] ahb_dmem_haddr2;
+logic [31:0] ahb_dmem_hwdata2;
+logic [2:0]  ahb_dmem_hsize2;
+logic [1:0]  ahb_dmem_htrans2;
+logic [3:0]  ahb_dmem_hprot2;
+logic        ahb_dmem_hwrite2;
+logic [31:0] ahb_dmem_hrdata2;
+logic        ahb_dmem_hresp2;
+logic        ahb_dmem_hready2;
+
+ahb_splitter i_ahb_splitter_DMEM (
+    .clk          (cpu_clk),        // Clock from the SCR1 core
+    .rst_n        (soc_rst_n),      // Reset signal
+
+    // SCR1 AHB Master interface
+    .HADDR        (ahb_dmem_haddr),      // AHB address
+    .HWDATA       (ahb_dmem_hwdata),     // AHB write data
+    .HSIZE        (ahb_dmem_hsize),      // AHB size
+    .HTRANS       (ahb_dmem_htrans),     // AHB transfer type
+    .HPROT        (ahb_dmem_hprot),      // AHB protection control
+    .HWRITE       (ahb_dmem_hwrite),     // AHB write enable
+    .HRDATA       (ahb_dmem_hrdata),     // AHB read data
+    .HRESP        (ahb_dmem_hresp),      // AHB response
+    .HREADY       (ahb_dmem_hready),     // AHB ready
+
+    // AHB bus 1 (connected to AHB-to-Avalon bridge 1)
+    .HADDR1       (ahb_dmem_haddr1),
+    .HWDATA1      (ahb_dmem_hwdata1),
+    .HSIZE1       (ahb_dmem_hsize1),
+    .HTRANS1      (ahb_dmem_htrans1),
+    .HPROT1       (ahb_dmem_hprot1),
+    .HWRITE1      (ahb_dmem_hwrite1),
+    .HRDATA1      (ahb_dmem_hrdata1),
+    .HRESP1       (ahb_dmem_hresp1),
+    .HREADY1      (ahb_dmem_hready1),
+
+    // AHB bus 2 (connected to AHB-to-Avalon bridge 2)
+    .HADDR2       (ahb_dmem_haddr2),
+    .HWDATA2      (ahb_dmem_hwdata2),
+    .HSIZE2       (ahb_dmem_hsize2),
+    .HTRANS2      (ahb_dmem_htrans2),
+    .HPROT2       (ahb_dmem_hprot2),
+    .HWRITE2      (ahb_dmem_hwrite2),
+    .HRDATA2      (ahb_dmem_hrdata2),
+    .HRESP2       (ahb_dmem_hresp2),
+    .HREADY2      (ahb_dmem_hready2)
+);
+
+//==========================================================
 // AHB I-MEM Bridge
 //==========================================================
 ahb_avalon_bridge
 i_ahb_imem (
-        // avalon master side
-        .clk                        (cpu_clk                ),
-        .reset_n                    (soc_rst_n              ),
-        .write                      (avl_imem_write         ),
-        .read                       (avl_imem_read          ),
-        .waitrequest                (avl_imem_waitrequest   ),
-        .address                    (avl_imem_address       ),
-        .byteenable                 (avl_imem_byteenable    ),
-        .writedata                  (avl_imem_writedata     ),
-        .readdatavalid              (avl_imem_readdatavalid ),
-        .readdata                   (avl_imem_readdata      ),
-        .response                   (avl_imem_response      ),
-        // ahb slave side
-        .HRDATA                     (ahb_imem_hrdata        ),
-        .HRESP                      (ahb_imem_hresp         ),
-        .HSIZE                      (ahb_imem_hsize         ),
-        .HTRANS                     (ahb_imem_htrans        ),
-        .HPROT                      (ahb_imem_hprot         ),
-        .HADDR                      (ahb_imem_haddr         ),
-        .HWDATA                     ('0                     ),
-        .HWRITE                     ('0                     ),
-        .HREADY                     (ahb_imem_hready        )
+       // avalon master side
+       .clk                        (cpu_clk                ),
+       .reset_n                    (soc_rst_n              ),
+       .write                      (avl_imem_write         ),
+       .read                       (avl_imem_read          ),
+       .waitrequest                (avl_imem_waitrequest   ),
+       .address                    (avl_imem_address       ),
+       .byteenable                 (avl_imem_byteenable    ),
+       .writedata                  (avl_imem_writedata     ),
+       .readdatavalid              (avl_imem_readdatavalid ),
+       .readdata                   (avl_imem_readdata      ),
+       .response                   (avl_imem_response      ),
+       // ahb slave side
+       .HRDATA                     (ahb_imem_hrdata1        ),
+       .HRESP                      (ahb_imem_hresp1         ),
+       .HSIZE                      (ahb_imem_hsize1         ),
+       .HTRANS                     (ahb_imem_htrans1        ),
+       .HPROT                      (ahb_imem_hprot1         ),
+       .HADDR                      (ahb_imem_haddr1         ),
+       .HWDATA                     ('0                     ),
+       .HWRITE                     ('0                     ),
+       .HREADY                     (ahb_imem_hready1        )
 );
 
 //==========================================================
@@ -398,29 +550,145 @@ i_ahb_imem (
 //==========================================================
 ahb_avalon_bridge
 i_ahb_dmem (
-        // avalon master side
-        .clk                        (cpu_clk                ),
-        .reset_n                    (soc_rst_n              ),
-        .write                      (avl_dmem_write         ),
-        .read                       (avl_dmem_read          ),
-        .waitrequest                (avl_dmem_waitrequest   ),
-        .address                    (avl_dmem_address       ),
-        .byteenable                 (avl_dmem_byteenable    ),
-        .writedata                  (avl_dmem_writedata     ),
-        .readdatavalid              (avl_dmem_readdatavalid ),
-        .readdata                   (avl_dmem_readdata      ),
-        .response                   (avl_dmem_response      ),
-        // ahb slave side
-        .HRDATA                     (ahb_dmem_hrdata        ),
-        .HRESP                      (ahb_dmem_hresp         ),
-        .HSIZE                      (ahb_dmem_hsize         ),
-        .HTRANS                     (ahb_dmem_htrans        ),
-        .HPROT                      (ahb_dmem_hprot         ),
-        .HADDR                      (ahb_dmem_haddr         ),
-        .HWDATA                     (ahb_dmem_hwdata        ),
-        .HWRITE                     (ahb_dmem_hwrite        ),
-        .HREADY                     (ahb_dmem_hready        )
+       // avalon master side
+       .clk                        (cpu_clk                ),
+       .reset_n                    (soc_rst_n              ),
+       .write                      (avl_dmem_write         ),
+       .read                       (avl_dmem_read          ),
+       .waitrequest                (avl_dmem_waitrequest   ),
+       .address                    (avl_dmem_address       ),
+       .byteenable                 (avl_dmem_byteenable    ),
+       .writedata                  (avl_dmem_writedata     ),
+       .readdatavalid              (avl_dmem_readdatavalid ),
+       .readdata                   (avl_dmem_readdata      ),
+       .response                   (avl_dmem_response      ),
+       // ahb slave side
+       .HRDATA                     (ahb_dmem_hrdata1        ),
+       .HRESP                      (ahb_dmem_hresp1         ),
+       .HSIZE                      (ahb_dmem_hsize1         ),
+       .HTRANS                     (ahb_dmem_htrans1        ),
+       .HPROT                      (ahb_dmem_hprot1         ),
+       .HADDR                      (ahb_dmem_haddr1         ),
+       .HWDATA                     (ahb_dmem_hwdata1        ),
+       .HWRITE                     (ahb_dmem_hwrite1        ),
+       .HREADY                     (ahb_dmem_hready1        )
 );
+
+//  //==========================================================
+//  // AHB to Wishbone Bridge and Wishbone to Avalon Bridge - IMEM
+//  //==========================================================
+//  ahb_to_wishbone_bridge
+//  i_ahb2wb_imem (
+//      // Clock and Reset
+//      .clk            (cpu_clk),
+//      .reset_n        (soc_rst_n),
+//      // AHB-Lite Slave Interface
+//      .HADDR          (ahb_imem_haddr),
+//      .HWDATA         (32'h0), // No writes to instruction memory
+//      .HWRITE         (1'b0),   // No writes to instruction memory
+//      .HSIZE          (ahb_imem_hsize),
+//      .HTRANS         (ahb_imem_htrans),
+//      .HSEL           (1'b1),
+//      .HREADY         (ahb_imem_hready),
+//      .HRDATA         (ahb_imem_hrdata),
+// //     .HREADY         (ahb_imem_hready),
+//      .HRESP          (ahb_imem_hresp),
+//      // Wishbone Master Interface
+//      .wb_adr_o       (wb_imem_adr_o),
+//      .wb_dat_o       (wb_imem_dat_o),
+//      .wb_sel_o       (wb_imem_sel_o),
+//      .wb_we_o        (wb_imem_we_o),
+//      .wb_cyc_o       (wb_imem_cyc_o),
+//      .wb_stb_o       (wb_imem_stb_o),
+//      .wb_dat_i       (wb_imem_dat_i),
+//      .wb_ack_i       (wb_imem_ack_i),
+//      .wb_err_i       (wb_imem_err_i)
+//  );
+
+//  wishbone_to_avalon_bridge
+//  i_wb2av_imem (
+//      // Clock and Reset
+//      .clk            (cpu_clk),
+//      .reset_n        (soc_rst_n),
+//      // Wishbone Master Interface
+//      .wb_adr_i       (wb_imem_adr_o),
+//      .wb_dat_i       (wb_imem_dat_o),
+//      .wb_sel_i       (wb_imem_sel_o),
+//      .wb_we_i        (wb_imem_we_o),
+//      .wb_cyc_i       (wb_imem_cyc_o),
+//      .wb_stb_i       (wb_imem_stb_o),
+//      .wb_dat_o       (wb_imem_dat_i),
+//      .wb_ack_o       (wb_imem_ack_i),
+//      .wb_err_o       (wb_imem_err_i),
+//      // Avalon Slave Interface
+//      .av_address     (avl_imem_address),
+//      .av_write       (avl_imem_write),
+//      .av_read        (avl_imem_read),
+//      .av_writedata   (avl_imem_writedata),
+//      .av_byteenable  (avl_imem_byteenable),
+//      .av_readdata    (avl_imem_readdata),
+//      .av_waitrequest (avl_imem_waitrequest),
+//      .av_readdatavalid(avl_imem_readdatavalid),
+//      .av_response    (avl_imem_response)
+//  );
+
+//  //==========================================================
+//  // AHB to Wishbone Bridge and Wishbone to Avalon Bridge - DMEM
+//  //==========================================================
+//  ahb_to_wishbone_bridge
+//  i_ahb2wb_dmem (
+//      // Clock and Reset
+//      .clk            (cpu_clk),
+//      .reset_n        (soc_rst_n),
+//      // AHB-Lite Slave Interface
+//      .HADDR          (ahb_dmem_haddr),
+//      .HWDATA         (ahb_dmem_hwdata),
+//      .HWRITE         (ahb_dmem_hwrite),
+//      .HSIZE          (ahb_dmem_hsize),
+//      .HTRANS         (ahb_dmem_htrans),
+//      .HSEL           (1'b1),
+//      .HREADY         (ahb_dmem_hready),
+//      .HRDATA         (ahb_dmem_hrdata),
+// //     .HREADY         (ahb_dmem_hready),
+//      .HRESP          (ahb_dmem_hresp),
+//      // Wishbone Master Interface
+//      .wb_adr_o       (wb_dmem_adr_o),
+//      .wb_dat_o       (wb_dmem_dat_o),
+//      .wb_sel_o       (wb_dmem_sel_o),
+//      .wb_we_o        (wb_dmem_we_o),
+//      .wb_cyc_o       (wb_dmem_cyc_o),
+//      .wb_stb_o       (wb_dmem_stb_o),
+//      .wb_dat_i       (wb_dmem_dat_i),
+//      .wb_ack_i       (wb_dmem_ack_i),
+//      .wb_err_i       (wb_dmem_err_i)
+//  );
+
+//  wishbone_to_avalon_bridge
+//  i_wb2av_dmem (
+//      // Clock and Reset
+//      .clk            (cpu_clk),
+//      .reset_n        (soc_rst_n),
+//      // Wishbone Master Interface
+//      .wb_adr_i       (wb_dmem_adr_o),
+//      .wb_dat_i       (wb_dmem_dat_o),
+//      .wb_sel_i       (wb_dmem_sel_o),
+//      .wb_we_i        (wb_dmem_we_o),
+//      .wb_cyc_i       (wb_dmem_cyc_o),
+//      .wb_stb_i       (wb_dmem_stb_o),
+//      .wb_dat_o       (wb_dmem_dat_i),
+//      .wb_ack_o       (wb_dmem_ack_i),
+//      .wb_err_o       (wb_dmem_err_i),
+//      // Avalon Slave Interface
+//      .av_address     (avl_dmem_address),
+//      .av_write       (avl_dmem_write),
+//      .av_read        (avl_dmem_read),
+//      .av_writedata   (avl_dmem_writedata),
+//      .av_byteenable  (avl_dmem_byteenable),
+//      .av_readdata    (avl_dmem_readdata),
+//      .av_waitrequest (avl_dmem_waitrequest),
+//      .av_readdatavalid(avl_dmem_readdatavalid),
+//      .av_response    (avl_dmem_response)
+//  );
 
 //=======================================================
 //  FPGA Platform's System-on-Programmable-Chip (SOPC)
