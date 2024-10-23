@@ -1,0 +1,29 @@
+timescale 1ns / 1ps
+
+module bram_synch_one_port
+    #(parameter ADDR_WIDTH = 13, DATA_WIDTH = 64)  // Parameterized memory size
+    (
+        input  logic                     clk,      // Clock input
+        input  logic                     we_a,     // Write enable
+        input  logic [ADDR_WIDTH-1:0]    addr_a,   // Address input
+        input  logic [DATA_WIDTH-1:0]    din_a,    // Data input for writing
+        output logic [DATA_WIDTH-1:0]    dout_a    // Data output for reading
+    );
+    
+    // Declare memory as an array with the given width and depth
+    logic [DATA_WIDTH-1:0] memory [0:2**ADDR_WIDTH-1];
+
+    // Synchronous memory initialization using $readmemh for hex file
+    initial begin
+        $readmemh("scbl.hex", memory);  // Load the hex file into memory
+    end
+
+    // Sequential logic for synchronous read and write operations
+    always_ff @(posedge clk) begin
+        if (we_a) 
+            memory[addr_a] <= din_a;  // Write operation
+        
+        dout_a <= memory[addr_a];  // Read operation
+    end
+
+endmodule
