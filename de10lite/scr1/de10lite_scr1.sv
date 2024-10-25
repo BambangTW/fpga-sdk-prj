@@ -364,6 +364,91 @@ i_uart(
     .dcd_pad_i      ('1                     )
 );
 
+// Wishbone interface signals for IMEM
+logic [31:0] wb_imem_dat_i, wb_imem_adr_i;
+logic [3:0]  wb_imem_sel_i;
+logic        wb_imem_we_i, wb_imem_cyc_i, wb_imem_stb_i;
+logic [31:0] wb_imem_dat_o;
+logic        wb_imem_ack_o, wb_imem_err_o;
+
+//==========================================================
+// AHB3-Lite to Wishbone bridge for I-MEM Bridge
+//==========================================================
+
+ahb3lite_to_wb u_ahb3lite_to_wb_imem (
+    .clk_i(cpu_clk),               // Clock signal
+    .rst_n_i(soc_rst_n),      // Reset signal (active-low)
+
+    // AHB3-Lite interface for IMEM
+    .sHADDR(ahb_imem_haddr),         
+    .sHWDATA(1'b0),       
+    .sHWRITE(1'b0),       
+    .sHSIZE(ahb_imem_hsize),         
+    .sHBURST(ahb_imem_hburst),       
+    .sHSEL(1'b1),  // Always selected
+    .sHTRANS(ahb_imem_htrans),       
+    .sHREADY(1'b1),       
+    .sHPROT(ahb_imem_hprot),         
+    .sHREADYOUT(ahb_imem_hready),    
+    .sHRDATA(ahb_imem_hrdata),       
+    .sHRESP(ahb_imem_hresp),         
+
+    // Wishbone interface for IMEM
+    .to_wb_dat_i(wb_imem_dat_i),    
+    .to_wb_adr_i(wb_imem_adr_i),    
+    .to_wb_sel_i(wb_imem_sel_i),    
+    .to_wb_we_i(wb_imem_we_i),      
+    .to_wb_cyc_i(wb_imem_cyc_i),    
+    .to_wb_stb_i(wb_imem_stb_i),    
+    .from_wb_dat_o(wb_imem_dat_o),  
+    .from_wb_ack_o(wb_imem_ack_o),  
+    .from_wb_err_o(wb_imem_err_o)   
+);
+
+// --- SCR1 I-MEM 2---------------------------------------------
+logic [3:0]                         ahb_imem_hprot_2;
+logic [2:0]                         ahb_imem_hburst_2;
+logic [2:0]                         ahb_imem_hsize_2;
+logic [1:0]                         ahb_imem_htrans_2;
+logic [SCR1_AHB_WIDTH-1:0]          ahb_imem_haddr_2;
+logic                               ahb_imem_hready_2;
+logic [SCR1_AHB_WIDTH-1:0]          ahb_imem_hrdata_2;
+logic                               ahb_imem_hresp_2;
+
+// Wishbone to AHB3-Lite bridge I-MEM
+wb_to_ahb3lite u_wb_to_ahb3lite_imem (
+    .clk_i(cpu_clk),               // Clock signal
+    .rst_n_i(soc_rst_n),           // Reset signal (active-low)
+
+    // Wishbone interface
+    .from_m_wb_adr_o(wb_imem_adr_i),    // Address output from Wishbone
+    .from_m_wb_sel_o(wb_imem_sel_i),    // Byte select output from Wishbone
+    .from_m_wb_we_o(wb_imem_we_i),      // Write enable from Wishbone
+    .from_m_wb_dat_o(wb_imem_dat_i),    // Data output from Wishbone
+    .from_m_wb_cyc_o(wb_imem_cyc_i),    // Cycle valid from Wishbone
+    .from_m_wb_stb_o(wb_imem_stb_i),    // Strobe from Wishbone
+    .to_m_wb_ack_i(wb_imem_ack_o),      // Acknowledge to Wishbone
+    .to_m_wb_err_i(wb_imem_err_o),      // Error to Wishbone
+    .to_m_wb_dat_i(wb_imem_dat_o),      // Data input to Wishbone
+
+    .from_m_wb_cti_o(),    // Cycle type identifier from Wishbone
+    .from_m_wb_bte_o(),    // Burst type extension from Wishbone
+
+    // AHB3-Lite interface
+    .mHSEL(1'b1),              // Slave select for AHB3-Lite
+    .mHSIZE(ahb_imem_hsize_2),            // Transfer size for AHB3-Lite
+    .mHRDATA(ahb_imem_hrdata_2),          // Read data from AHB3-Lite
+    .mHRESP(ahb_imem_hresp_2),            // Response signal from AHB3-Lite
+    .mHREADY(ahb_imem_hready_2),          // Ready signal from AHB3-Lite
+    .mHREADYOUT(),    // Ready output signal for AHB3-Lite
+    .mHWRITE(1'b0),          // Write enable for AHB3-Lite
+    .mHBURST(ahb_imem_hburst_2),          // Burst type for AHB3-Lite
+    .mHADDR(ahb_imem_haddr_2),            // Address for AHB3-Lite
+    .mHTRANS(ahb_imem_htrans_2),          // Transfer type for AHB3-Lite
+    .mHWDATA(1'b0),          // Write data for AHB3-Lite
+    .mHPROT(ahb_imem_hprot_2)             // Protection control for AHB3-Lite
+);
+
 //==========================================================
 // AHB I-MEM Bridge
 //==========================================================
@@ -382,19 +467,106 @@ i_ahb_imem (
         .readdata                   (avl_imem_readdata      ),
         .response                   (avl_imem_response      ),
         // ahb slave side
-        .HRDATA                     (ahb_imem_hrdata        ),
-        .HRESP                      (ahb_imem_hresp         ),
-        .HSIZE                      (ahb_imem_hsize         ),
-        .HTRANS                     (ahb_imem_htrans        ),
-        .HPROT                      (ahb_imem_hprot         ),
-        .HADDR                      (ahb_imem_haddr         ),
+        .HRDATA                     (ahb_imem_hrdata_2        ),
+        .HRESP                      (ahb_imem_hresp_2         ),
+        .HSIZE                      (ahb_imem_hsize_2         ),
+        .HTRANS                     (ahb_imem_htrans_2        ),
+        .HPROT                      (ahb_imem_hprot_2         ),
+        .HADDR                      (ahb_imem_haddr_2         ),
         .HWDATA                     ('0                     ),
         .HWRITE                     ('0                     ),
-        .HREADY                     (ahb_imem_hready        )
+        .HREADY                     (ahb_imem_hready_2        )
+);
+
+// Wishbone interface signals for DMEM
+logic [31:0] wb_dmem_dat_i, wb_dmem_adr_i;
+logic [3:0]  wb_dmem_sel_i;
+logic        wb_dmem_we_i, wb_dmem_cyc_i, wb_dmem_stb_i;
+logic [31:0] wb_dmem_dat_o;
+logic        wb_dmem_ack_o, wb_dmem_err_o;
+
+//==========================================================
+// AHB3-Lite to Wishbone bridge for D-MEM Bridge
+//==========================================================
+
+ahb3lite_to_wb u_ahb3lite_to_wb_dmem (
+    .clk_i(cpu_clk),               // Clock signal
+    .rst_n_i(soc_rst_n),      // Reset signal (active-low)
+
+    // AHB3-Lite interface for DMEM
+    .sHADDR(ahb_dmem_haddr),         
+    .sHWDATA(ahb_dmem_hwdata),       
+    .sHWRITE(ahb_dmem_hwrite),       
+    .sHSIZE(ahb_dmem_hsize),         
+    .sHBURST(ahb_dmem_hburst),       
+    .sHSEL(1'b1),  // Always selected
+    .sHTRANS(ahb_dmem_htrans),       
+    .sHREADY(1'b1),       
+    .sHPROT(ahb_dmem_hprot),         
+    .sHREADYOUT(ahb_dmem_hready),    
+    .sHRDATA(ahb_dmem_hrdata),       
+    .sHRESP(ahb_dmem_hresp),         
+
+    // Wishbone interface for DMEM
+    .to_wb_dat_i(wb_dmem_dat_i),    
+    .to_wb_adr_i(wb_dmem_adr_i),    
+    .to_wb_sel_i(wb_dmem_sel_i),    
+    .to_wb_we_i(wb_dmem_we_i),      
+    .to_wb_cyc_i(wb_dmem_cyc_i),    
+    .to_wb_stb_i(wb_dmem_stb_i),    
+    .from_wb_dat_o(wb_dmem_dat_o),  
+    .from_wb_ack_o(wb_dmem_ack_o),  
+    .from_wb_err_o(wb_dmem_err_o)   
+);
+
+// --- SCR1 D-MEM 2---------------------------------------------
+logic [3:0]                         ahb_dmem_hprot_2;
+logic [2:0]                         ahb_dmem_hburst_2;
+logic [2:0]                         ahb_dmem_hsize_2;
+logic [1:0]                         ahb_dmem_htrans_2;
+logic [SCR1_AHB_WIDTH-1:0]          ahb_dmem_haddr_2;
+logic                               ahb_dmem_hwrite_2;
+logic [SCR1_AHB_WIDTH-1:0]          ahb_dmem_hwdata_2;
+logic                               ahb_dmem_hready_2;
+logic [SCR1_AHB_WIDTH-1:0]          ahb_dmem_hrdata_2;
+logic                               ahb_dmem_hresp_2;
+
+// Wishbone to AHB3-Lite bridge I-MEM
+wb_to_ahb3lite u_wb_to_ahb3lite_dmem (
+    .clk_i(cpu_clk),               // Clock signal
+    .rst_n_i(soc_rst_n),           // Reset signal (active-low)
+
+    // Wishbone interface
+    .from_m_wb_adr_o(wb_dmem_adr_i),    // Address output from Wishbone
+    .from_m_wb_sel_o(wb_dmem_sel_i),    // Byte select output from Wishbone
+    .from_m_wb_we_o(wb_dmem_we_i),      // Write enable from Wishbone
+    .from_m_wb_dat_o(wb_dmem_dat_i),    // Data output from Wishbone
+    .from_m_wb_cyc_o(wb_dmem_cyc_i),    // Cycle valid from Wishbone
+    .from_m_wb_stb_o(wb_dmem_stb_i),    // Strobe from Wishbone
+    .to_m_wb_ack_i(wb_dmem_ack_o),      // Acknowledge to Wishbone
+    .to_m_wb_err_i(wb_dmem_err_o),      // Error to Wishbone
+    .to_m_wb_dat_i(wb_dmem_dat_o),      // Data input to Wishbone
+
+    .from_m_wb_cti_o(),    // Cycle type identifier from Wishbone
+    .from_m_wb_bte_o(),    // Burst type extension from Wishbone
+
+    // AHB3-Lite interface
+    .mHSEL(1'b1),              // Slave select for AHB3-Lite
+    .mHSIZE(ahb_dmem_hsize_2),            // Transfer size for AHB3-Lite
+    .mHRDATA(ahb_dmem_hrdata_2),          // Read data from AHB3-Lite
+    .mHRESP(ahb_dmem_hresp_2),            // Response signal from AHB3-Lite
+    .mHREADY(ahb_dmem_hready_2),          // Ready signal from AHB3-Lite
+    .mHREADYOUT(),    // Ready output signal for AHB3-Lite
+    .mHWRITE(ahb_dmem_hwrite_2),          // Write enable for AHB3-Lite
+    .mHBURST(ahb_dmem_hburst_2),          // Burst type for AHB3-Lite
+    .mHADDR(ahb_dmem_haddr_2),            // Address for AHB3-Lite
+    .mHTRANS(ahb_dmem_htrans_2),          // Transfer type for AHB3-Lite
+    .mHWDATA(ahb_dmem_hwdata_2),          // Write data for AHB3-Lite
+    .mHPROT(ahb_dmem_hprot_2)             // Protection control for AHB3-Lite
 );
 
 //==========================================================
-// AHB I-MEM Bridge
+// AHB D-MEM Bridge
 //==========================================================
 ahb_avalon_bridge
 i_ahb_dmem (
@@ -411,15 +583,15 @@ i_ahb_dmem (
         .readdata                   (avl_dmem_readdata      ),
         .response                   (avl_dmem_response      ),
         // ahb slave side
-        .HRDATA                     (ahb_dmem_hrdata        ),
-        .HRESP                      (ahb_dmem_hresp         ),
-        .HSIZE                      (ahb_dmem_hsize         ),
-        .HTRANS                     (ahb_dmem_htrans        ),
-        .HPROT                      (ahb_dmem_hprot         ),
-        .HADDR                      (ahb_dmem_haddr         ),
-        .HWDATA                     (ahb_dmem_hwdata        ),
-        .HWRITE                     (ahb_dmem_hwrite        ),
-        .HREADY                     (ahb_dmem_hready        )
+        .HRDATA                     (ahb_dmem_hrdata_2        ),
+        .HRESP                      (ahb_dmem_hresp_2         ),
+        .HSIZE                      (ahb_dmem_hsize_2         ),
+        .HTRANS                     (ahb_dmem_htrans_2        ),
+        .HPROT                      (ahb_dmem_hprot_2         ),
+        .HADDR                      (ahb_dmem_haddr_2         ),
+        .HWDATA                     (ahb_dmem_hwdata_2        ),
+        .HWRITE                     (ahb_dmem_hwrite_2        ),
+        .HREADY                     (ahb_dmem_hready_2        )
 );
 
 //=======================================================
