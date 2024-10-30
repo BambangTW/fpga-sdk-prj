@@ -1,7 +1,7 @@
-`timescale 1ns / 1ps
+timescale 1ns / 1ps
 
 module bram_synch_one_port
-    #(parameter ADDR_WIDTH = 14, DATA_WIDTH = 32)  // Parameterized memory size
+    #(parameter ADDR_WIDTH = 13, DATA_WIDTH = 64)  // Parameterized memory size
     (
         input  logic                     clk,      // Clock input
         input  logic                     we_a,     // Write enable
@@ -15,7 +15,7 @@ module bram_synch_one_port
 
     // Synchronous memory initialization using $readmemh for hex file
     initial begin
-        $readmemh("D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/scbl_correct_rearranged.mem", memory);  // Load the hex file into memory
+        $readmemh("D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/scbl.hex", memory);  // Load the hex file into memory
     end
 
     // Sequential logic for synchronous read and write operations

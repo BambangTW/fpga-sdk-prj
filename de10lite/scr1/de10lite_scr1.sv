@@ -338,18 +338,28 @@ end
 
 assign uart_waitrequest = ~uart_wb_ack;
 
+// Slave 0 Signals (UART)
+logic [31:0] uart_wbd_dat_i;
+logic        uart_wbd_ack_i;
+logic [31:0] uart_wbd_dat_o;
+logic [31:0] uart_wbd_adr_o;
+logic [3:0]  uart_wbd_sel_o;
+logic        uart_wbd_we_o;
+logic        uart_wbd_cyc_o;
+logic        uart_wbd_stb_o;
+
 uart_top
 i_uart(
     .wb_clk_i       (cpu_clk                ),
     // Wishbone signals
     .wb_rst_i       (~soc_rst_n             ),
-    .wb_adr_i       (uart_address[4:2]      ),
-    .wb_dat_i       (uart_writedata[7:0]    ),
-    .wb_dat_o       (uart_wb_dat            ),
-    .wb_we_i        (uart_write             ),
-    .wb_stb_i       (uart_read_vd|uart_write),
-    .wb_cyc_i       (uart_read_vd|uart_write),
-    .wb_ack_o       (uart_wb_ack            ),
+    .wb_adr_i       (uart_wbd_adr_o         ),
+    .wb_dat_i       (uart_wbd_dat_o         ),
+    .wb_dat_o       (uart_wbd_dat_i         ),
+    .wb_we_i        (uart_wbd_we_o          ),
+    .wb_stb_i       (uart_wbd_stb_o         ),
+    .wb_cyc_i       (uart_wbd_cyc_o         ),
+    .wb_ack_o       (uart_wbd_ack_i         ),
     .wb_sel_i       (4'd1                   ),
     .int_o          (uart_irq               ),
 
@@ -405,50 +415,6 @@ ahb3lite_to_wb u_ahb3lite_to_wb_imem (
     .from_wb_err_o(wb_imem_err_o)   
 );
 
-// --- SCR1 I-MEM 2---------------------------------------------
-logic [3:0]                         ahb_imem_hprot_2;
-logic [2:0]                         ahb_imem_hburst_2;
-logic [2:0]                         ahb_imem_hsize_2;
-logic [1:0]                         ahb_imem_htrans_2;
-logic [SCR1_AHB_WIDTH-1:0]          ahb_imem_haddr_2;
-logic                               ahb_imem_hready_2;
-logic [SCR1_AHB_WIDTH-1:0]          ahb_imem_hrdata_2;
-logic                               ahb_imem_hresp_2;
-
-// Wishbone to AHB3-Lite bridge I-MEM
-wb_to_ahb3lite u_wb_to_ahb3lite_imem (
-    .clk_i(cpu_clk),               // Clock signal
-    .rst_n_i(soc_rst_n),           // Reset signal (active-low)
-
-    // Wishbone interface
-    .from_m_wb_adr_o(wb_imem_adr_i),    // Address output from Wishbone
-    .from_m_wb_sel_o(wb_imem_sel_i),    // Byte select output from Wishbone
-    .from_m_wb_we_o(wb_imem_we_i),      // Write enable from Wishbone
-    .from_m_wb_dat_o(wb_imem_dat_i),    // Data output from Wishbone
-    .from_m_wb_cyc_o(wb_imem_cyc_i),    // Cycle valid from Wishbone
-    .from_m_wb_stb_o(wb_imem_stb_i),    // Strobe from Wishbone
-    .to_m_wb_ack_i(wb_imem_ack_o),      // Acknowledge to Wishbone
-    .to_m_wb_err_i(wb_imem_err_o),      // Error to Wishbone
-    .to_m_wb_dat_i(wb_imem_dat_o),      // Data input to Wishbone
-
-    .from_m_wb_cti_o(),    // Cycle type identifier from Wishbone
-    .from_m_wb_bte_o(),    // Burst type extension from Wishbone
-
-    // AHB3-Lite interface
-    .mHSEL(1'b1),              // Slave select for AHB3-Lite
-    .mHSIZE(ahb_imem_hsize_2),            // Transfer size for AHB3-Lite
-    .mHRDATA(ahb_imem_hrdata_2),          // Read data from AHB3-Lite
-    .mHRESP(ahb_imem_hresp_2),            // Response signal from AHB3-Lite
-    .mHREADY(ahb_imem_hready_2),          // Ready signal from AHB3-Lite
-    .mHREADYOUT(),    // Ready output signal for AHB3-Lite
-    .mHWRITE(1'b0),          // Write enable for AHB3-Lite
-    .mHBURST(ahb_imem_hburst_2),          // Burst type for AHB3-Lite
-    .mHADDR(ahb_imem_haddr_2),            // Address for AHB3-Lite
-    .mHTRANS(ahb_imem_htrans_2),          // Transfer type for AHB3-Lite
-    .mHWDATA(1'b0),          // Write data for AHB3-Lite
-    .mHPROT(ahb_imem_hprot_2)             // Protection control for AHB3-Lite
-);
-
 //==========================================================
 // AHB I-MEM Bridge
 //==========================================================
@@ -467,15 +433,15 @@ i_ahb_imem (
         .readdata                   (avl_imem_readdata      ),
         .response                   (avl_imem_response      ),
         // ahb slave side
-        .HRDATA                     (ahb_imem_hrdata_2        ),
-        .HRESP                      (ahb_imem_hresp_2         ),
-        .HSIZE                      (ahb_imem_hsize_2         ),
-        .HTRANS                     (ahb_imem_htrans_2        ),
-        .HPROT                      (ahb_imem_hprot_2         ),
-        .HADDR                      (ahb_imem_haddr_2         ),
+        .HRDATA                     (),
+        .HRESP                      (),
+        .HSIZE                      (),
+        .HTRANS                     (),
+        .HPROT                      (),
+        .HADDR                      (),
         .HWDATA                     ('0                     ),
         .HWRITE                     ('0                     ),
-        .HREADY                     (ahb_imem_hready_2        )
+        .HREADY                     ()
 );
 
 // Wishbone interface signals for DMEM
@@ -519,52 +485,6 @@ ahb3lite_to_wb u_ahb3lite_to_wb_dmem (
     .from_wb_err_o(wb_dmem_err_o)   
 );
 
-// --- SCR1 D-MEM 2---------------------------------------------
-logic [3:0]                         ahb_dmem_hprot_2;
-logic [2:0]                         ahb_dmem_hburst_2;
-logic [2:0]                         ahb_dmem_hsize_2;
-logic [1:0]                         ahb_dmem_htrans_2;
-logic [SCR1_AHB_WIDTH-1:0]          ahb_dmem_haddr_2;
-logic                               ahb_dmem_hwrite_2;
-logic [SCR1_AHB_WIDTH-1:0]          ahb_dmem_hwdata_2;
-logic                               ahb_dmem_hready_2;
-logic [SCR1_AHB_WIDTH-1:0]          ahb_dmem_hrdata_2;
-logic                               ahb_dmem_hresp_2;
-
-// Wishbone to AHB3-Lite bridge I-MEM
-wb_to_ahb3lite u_wb_to_ahb3lite_dmem (
-    .clk_i(cpu_clk),               // Clock signal
-    .rst_n_i(soc_rst_n),           // Reset signal (active-low)
-
-    // Wishbone interface
-    .from_m_wb_adr_o(wb_dmem_adr_i),    // Address output from Wishbone
-    .from_m_wb_sel_o(wb_dmem_sel_i),    // Byte select output from Wishbone
-    .from_m_wb_we_o(wb_dmem_we_i),      // Write enable from Wishbone
-    .from_m_wb_dat_o(wb_dmem_dat_i),    // Data output from Wishbone
-    .from_m_wb_cyc_o(wb_dmem_cyc_i),    // Cycle valid from Wishbone
-    .from_m_wb_stb_o(wb_dmem_stb_i),    // Strobe from Wishbone
-    .to_m_wb_ack_i(wb_dmem_ack_o),      // Acknowledge to Wishbone
-    .to_m_wb_err_i(wb_dmem_err_o),      // Error to Wishbone
-    .to_m_wb_dat_i(wb_dmem_dat_o),      // Data input to Wishbone
-
-    .from_m_wb_cti_o(),    // Cycle type identifier from Wishbone
-    .from_m_wb_bte_o(),    // Burst type extension from Wishbone
-
-    // AHB3-Lite interface
-    .mHSEL(1'b1),              // Slave select for AHB3-Lite
-    .mHSIZE(ahb_dmem_hsize_2),            // Transfer size for AHB3-Lite
-    .mHRDATA(ahb_dmem_hrdata_2),          // Read data from AHB3-Lite
-    .mHRESP(ahb_dmem_hresp_2),            // Response signal from AHB3-Lite
-    .mHREADY(ahb_dmem_hready_2),          // Ready signal from AHB3-Lite
-    .mHREADYOUT(),    // Ready output signal for AHB3-Lite
-    .mHWRITE(ahb_dmem_hwrite_2),          // Write enable for AHB3-Lite
-    .mHBURST(ahb_dmem_hburst_2),          // Burst type for AHB3-Lite
-    .mHADDR(ahb_dmem_haddr_2),            // Address for AHB3-Lite
-    .mHTRANS(ahb_dmem_htrans_2),          // Transfer type for AHB3-Lite
-    .mHWDATA(ahb_dmem_hwdata_2),          // Write data for AHB3-Lite
-    .mHPROT(ahb_dmem_hprot_2)             // Protection control for AHB3-Lite
-);
-
 //==========================================================
 // AHB D-MEM Bridge
 //==========================================================
@@ -583,16 +503,142 @@ i_ahb_dmem (
         .readdata                   (avl_dmem_readdata      ),
         .response                   (avl_dmem_response      ),
         // ahb slave side
-        .HRDATA                     (ahb_dmem_hrdata_2        ),
-        .HRESP                      (ahb_dmem_hresp_2         ),
-        .HSIZE                      (ahb_dmem_hsize_2         ),
-        .HTRANS                     (ahb_dmem_htrans_2        ),
-        .HPROT                      (ahb_dmem_hprot_2         ),
-        .HADDR                      (ahb_dmem_haddr_2         ),
-        .HWDATA                     (ahb_dmem_hwdata_2        ),
-        .HWRITE                     (ahb_dmem_hwrite_2        ),
-        .HREADY                     (ahb_dmem_hready_2        )
+        .HRDATA                     (),
+        .HRESP                      (),
+        .HSIZE                      (),
+        .HTRANS                     (),
+        .HPROT                      (),
+        .HADDR                      (),
+        .HWDATA                     (),
+        .HWRITE                     (),
+        .HREADY                     ()
 );
+
+//=======================================================
+// Instantiation of wishbone_bram_wrapper
+//=======================================================
+
+// Declare wires for connecting to the BRAM module
+logic we_a;                         // Write enable signal
+logic [12:0] addr_a;                // Address signal, 13 bits for ADDR_WIDTH = 13
+logic [63:0] din_a;                 // Data input, 64 bits for DATA_WIDTH = 64
+logic [63:0] dout_a;                // Data output, 64 bits for DATA_WIDTH = 64
+
+ // Instantiation of bram_synch_one_port
+//  bram_synch_one_port #(
+//      .ADDR_WIDTH(13),   // Set address width (default is 13)
+//      .DATA_WIDTH(64)    // Set data width (default is 64)
+//  ) bram_inst (
+//      .clk    (cpu_clk),          // Connect to system clock
+//      .we_a   (we_a),         // Connect to write enable signal
+//      .addr_a (addr_a),       // Connect to address input [ADDR_WIDTH-1:0]
+//      .din_a  (din_a),        // Connect to data input [DATA_WIDTH-1:0]
+//      .dout_a (dout_a)        // Connect to data output [DATA_WIDTH-1:0]
+//  );
+
+//bootloader	bootloader_inst (
+//	.address ( addr_a ),
+//	.clock ( cpu_clk ),
+//	.data ( din_a ),
+//	.wren ( we_a ),
+//	.q ( dout_a )
+//	);
+
+
+// Declare wires for connecting to the Wishbone and BRAM interfaces
+logic wb_bram_stb;                         // Wishbone strobe signal
+logic wb_bram_cyc;                         // Wishbone cycle signal
+logic wb_bram_we;                          // Wishbone write enable
+logic [31:0] wb_bram_addr;                 // Wishbone address, 32 bits
+logic [31:0] wb_bram_wdata;                // Wishbone write data, 32 bits
+logic [31:0] wb_bram_rdata;                // Wishbone read data, 32 bits
+logic wb_bram_ack;                         // Wishbone acknowledge signal
+logic wb_bram_err;                         // Wishbone error signal
+
+// Instantiate the bram32_wishbone_wrapper
+    // bram32_wishbone_wrapper bram32_inst (
+    //     .clk(cpu_clk),           // Connect clock
+    //     .rst(soc_reset_n),           // Connect reset
+    //     .wb_adr_i(wb_bram_addr), // Connect address input
+    //     .wb_dat_i(wb_bram_wdata), // Connect data input for writes
+    //     .wb_dat_o(wb_bram_rdata), // Connect data output for reads
+    //     .wb_we_i(wb_bram_we),   // Connect write enable
+    //     .wb_stb_i(wb_bram_stb), // Connect strobe
+    //     .wb_cyc_i(wb_bram_cyc), // Connect cycle
+    //     .wb_ack_o(wb_bram_ack), // Connect acknowledge
+    //     .wb_err_o(wb_bram_err)  // Connect error output
+    // );
+
+    
+
+// wishbone_bram_wrapper #(
+//     .ADDR_WIDTH(13),   // Set address width (13 for default)
+//     .DATA_WIDTH(64)    // Set data width (64 for default)
+// ) wishbone_bram_inst (
+//     // Wishbone Interface
+//     .clk        (cpu_clk),         // Connect to system clock
+//     .rst_n      (soc_reset_n),       // Connect to active low reset
+//     .wb_stb     (wb_bram_stb),      // Connect to Wishbone strobe signal
+//     .wb_cyc     (wb_bram_cyc),      // Connect to Wishbone cycle signal
+//     .wb_we      (wb_bram_we),       // Connect to Wishbone write enable
+//     .wb_addr    (wb_bram_addr),     // Connect to Wishbone address bus [31:0]
+//     .wb_wdata   (wb_bram_wdata),    // Connect to Wishbone write data bus [31:0]
+//     .wb_rdata   (wb_bram_rdata),    // Connect to Wishbone read data bus [31:0]
+//     .wb_ack     (wb_bram_ack),      // Connect to Wishbone acknowledge signal
+//     .wb_err     (wb_bram_err),      // Connect to Wishbone error signal
+
+//     // BRAM Interface
+//     .bram_addr  (addr_a),   // Connect to BRAM address [ADDR_WIDTH-1:0]
+//     .bram_we    (we_a),     // Connect to BRAM write enable
+//     .bram_din   (din_a),    // Connect to BRAM data input [DATA_WIDTH-1:0]
+//     .bram_dout  (dout_a)    // Connect to BRAM data output [DATA_WIDTH-1:0]
+// );
+
+//=======================================================
+// Instantiate the Wishbone Interconnect module
+//=======================================================
+    wb_interconnect_2m2s u_wb_interconnect_2m2s (
+        .clk_i(cpu_clk),
+        .rst_n(soc_reset_n),
+        // Master 0 Interface
+        .m0_wbd_dat_i(wb_imem_dat_i),
+        .m0_wbd_adr_i(wb_imem_adr_i),
+        .m0_wbd_sel_i(wb_imem_sel_i),
+        .m0_wbd_we_i(wb_imem_we_i),
+        .m0_wbd_cyc_i(wb_imem_cyc_i),
+        .m0_wbd_stb_i(wb_imem_stb_i),
+        .m0_wbd_dat_o(wb_imem_dat_o),
+        .m0_wbd_ack_o(wb_imem_ack_o),
+        .m0_wbd_err_o(wb_imem_err_o),
+        // Master 1 Interface
+        .m1_wbd_dat_i(wb_dmem_dat_i),
+        .m1_wbd_adr_i(wb_dmem_adr_i),
+        .m1_wbd_sel_i(wb_dmem_sel_i),
+        .m1_wbd_we_i(wb_dmem_we_i),
+        .m1_wbd_cyc_i(wb_dmem_cyc_i),
+        .m1_wbd_stb_i(wb_dmem_stb_i),
+        .m1_wbd_dat_o(wb_dmem_dat_o),
+        .m1_wbd_ack_o(wb_dmem_ack_o),
+        .m1_wbd_err_o(wb_dmem_err_o),
+        // Slave 0 Interface (UART)
+        .s0_wbd_dat_i(uart_wbd_dat_i),
+        .s0_wbd_ack_i(uart_wbd_ack_i),
+        .s0_wbd_dat_o(uart_wbd_dat_o),
+        .s0_wbd_adr_o(uart_wbd_adr_o),
+        .s0_wbd_sel_o(uart_wbd_sel_o),
+        .s0_wbd_we_o(uart_wbd_we_o),
+        .s0_wbd_cyc_o(uart_wbd_cyc_o),
+        .s0_wbd_stb_o(uart_wbd_stb_o),
+        // Slave 1 Interface (SRAM)
+        .s1_wbd_dat_i(wb_bram_rdata),
+        .s1_wbd_ack_i(wb_bram_ack),
+        .s1_wbd_dat_o(wb_bram_wdata),
+        .s1_wbd_adr_o(wb_bram_addr),
+        .s1_wbd_sel_o(),
+        .s1_wbd_we_o(wb_bram_we),
+        .s1_wbd_cyc_o(wb_bram_cyc),
+        .s1_wbd_stb_o(wb_bram_stb)
+    );
 
 //=======================================================
 //  FPGA Platform's System-on-Programmable-Chip (SOPC)
@@ -680,7 +726,9 @@ assign JTAG_TDO             = (scr1_jtag_tdo_en) ? scr1_jtag_tdo_int : 1'bZ;
 //==========================================================
 // LEDs
 //==========================================================
-assign LEDR[7:0]    =  pio_led;
+// assign LEDR[7:0]    =  pio_led;
+assign LEDR[0]      = wb_imem_err_o;
+assign LEDR[1]      = wb_dmem_err_o;
 assign LEDR[8]      = ~hard_rst_n;
 assign LEDR[9]      =  heartbeat;
 assign {HEX1,HEX0}  =  pio_hex_1_0;

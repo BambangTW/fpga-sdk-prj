@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module wb_arb_2m (
     input  logic       clk,
     input  logic       rstn,

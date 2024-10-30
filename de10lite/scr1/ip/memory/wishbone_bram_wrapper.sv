@@ -23,7 +23,7 @@ module wishbone_bram_wrapper
         output logic                  bram_we,     // BRAM write enable
         output logic [DATA_WIDTH-1:0] bram_din,    // BRAM write data
         input  logic [DATA_WIDTH-1:0] bram_dout    // BRAM read data
-    );
+    ); 
 
     // Local Parameters
     localparam BASE_ADDR = 32'hFFFF0000;
