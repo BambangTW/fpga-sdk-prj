@@ -519,10 +519,10 @@ i_ahb_dmem (
 //=======================================================
 
 // Declare wires for connecting to the BRAM module
-logic we_a;                         // Write enable signal
-logic [12:0] addr_a;                // Address signal, 13 bits for ADDR_WIDTH = 13
-logic [63:0] din_a;                 // Data input, 64 bits for DATA_WIDTH = 64
-logic [63:0] dout_a;                // Data output, 64 bits for DATA_WIDTH = 64
+// logic we_a;                         // Write enable signal
+// logic [12:0] addr_a;                // Address signal, 13 bits for ADDR_WIDTH = 13
+// logic [63:0] din_a;                 // Data input, 64 bits for DATA_WIDTH = 64
+// logic [63:0] dout_a;                // Data output, 64 bits for DATA_WIDTH = 64
 
  // Instantiation of bram_synch_one_port
 //  bram_synch_one_port #(
@@ -556,18 +556,18 @@ logic wb_bram_ack;                         // Wishbone acknowledge signal
 logic wb_bram_err;                         // Wishbone error signal
 
 // Instantiate the bram32_wishbone_wrapper
-    // bram32_wishbone_wrapper bram32_inst (
-    //     .clk(cpu_clk),           // Connect clock
-    //     .rst(soc_reset_n),           // Connect reset
-    //     .wb_adr_i(wb_bram_addr), // Connect address input
-    //     .wb_dat_i(wb_bram_wdata), // Connect data input for writes
-    //     .wb_dat_o(wb_bram_rdata), // Connect data output for reads
-    //     .wb_we_i(wb_bram_we),   // Connect write enable
-    //     .wb_stb_i(wb_bram_stb), // Connect strobe
-    //     .wb_cyc_i(wb_bram_cyc), // Connect cycle
-    //     .wb_ack_o(wb_bram_ack), // Connect acknowledge
-    //     .wb_err_o(wb_bram_err)  // Connect error output
-    // );
+bram32_wishbone_wrapper bram32_inst (
+    .clk(cpu_clk),           // Connect clock
+    .rst_n(soc_rst_n),           // Connect reset
+    .wb_adr_i(wb_bram_addr), // Connect address input
+    .wb_dat_i(wb_bram_wdata), // Connect data input for writes
+    .wb_dat_o(wb_bram_rdata), // Connect data output for reads
+    .wb_we_i(wb_bram_we),   // Connect write enable
+    .wb_stb_i(wb_bram_stb), // Connect strobe
+    .wb_cyc_i(wb_bram_cyc), // Connect cycle
+    .wb_ack_o(wb_bram_ack), // Connect acknowledge
+    .wb_err_o(wb_bram_err)  // Connect error output
+);
 
     
 
@@ -599,7 +599,7 @@ logic wb_bram_err;                         // Wishbone error signal
 //=======================================================
     wb_interconnect_2m2s u_wb_interconnect_2m2s (
         .clk_i(cpu_clk),
-        .rst_n(soc_reset_n),
+        .rst_n(soc_rst_n),
         // Master 0 Interface
         .m0_wbd_dat_i(wb_imem_dat_i),
         .m0_wbd_adr_i(wb_imem_adr_i),

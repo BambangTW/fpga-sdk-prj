@@ -3,7 +3,7 @@
 module bram32_wishbone_wrapper (
     // Wishbone interface signals
     input  logic          clk,           // Clock input
-    input  logic          rst,           // Reset input
+    input  logic          rst_n,           // Reset input
     input  logic [31:0]   wb_adr_i,      // Wishbone address input (32 bits)
     input  logic [31:0]   wb_dat_i,      // Wishbone data input for writes (32 bits)
     output logic [31:0]   wb_dat_o,      // Wishbone data output for reads (32 bits)
@@ -30,6 +30,7 @@ module bram32_wishbone_wrapper (
         .DATA_WIDTH(DATA_WIDTH)
     ) bram_inst (
         .clk(clk),
+        .reset_n(rst_n),
         .we_a(bram_we),
         .addr_a(bram_addr),
         .din_a(bram_din),
@@ -43,8 +44,8 @@ module bram32_wishbone_wrapper (
     assign bram_din = wb_dat_i;
 
     // Acknowledge and error handling logic
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
             wb_ack_o <= 0;
             wb_err_o <= 0;
         end else begin
