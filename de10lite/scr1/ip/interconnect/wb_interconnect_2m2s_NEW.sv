@@ -1,0 +1,290 @@
+`timescale 1ns / 1ps
+
+module wb_interconnect_2m2s_NEW (
+    input logic        clk_i, 
+    input logic        rst_n,
+
+    // Master 0 Interface
+    input   logic   [31:0]  m0_wbd_dat_i,
+    input   logic   [31:0]  m0_wbd_adr_i,
+    input   logic   [3:0]   m0_wbd_sel_i,
+    input   logic           m0_wbd_we_i,
+    input   logic           m0_wbd_cyc_i,
+    input   logic           m0_wbd_stb_i,
+    output  logic   [31:0]  m0_wbd_dat_o,
+    output  logic           m0_wbd_ack_o,
+    output  logic           m0_wbd_err_o,
+    
+    // Master 1 Interface
+    input   logic   [31:0]  m1_wbd_dat_i,
+    input   logic   [31:0]  m1_wbd_adr_i,
+    input   logic   [3:0]   m1_wbd_sel_i,
+    input   logic           m1_wbd_we_i,
+    input   logic           m1_wbd_cyc_i,
+    input   logic           m1_wbd_stb_i,
+    output  logic   [31:0]  m1_wbd_dat_o,
+    output  logic           m1_wbd_ack_o,
+    output  logic           m1_wbd_err_o,
+    
+    // Slave 0 Interface (UART)
+    input   logic   [31:0]  s0_wbd_dat_i,
+    input   logic           s0_wbd_ack_i,
+    output  logic   [31:0]  s0_wbd_dat_o,
+    output  logic   [31:0]  s0_wbd_adr_o,
+    output  logic   [3:0]   s0_wbd_sel_o,
+    output  logic           s0_wbd_we_o,
+    output  logic           s0_wbd_cyc_o,
+    output  logic           s0_wbd_stb_o,
+    
+    // Slave 1 Interface (SRAM)
+    input   logic   [31:0]  s1_wbd_dat_i,
+    input   logic           s1_wbd_ack_i,
+    output  logic   [31:0]  s1_wbd_dat_o,
+    output  logic   [31:0]  s1_wbd_adr_o,
+    output  logic   [3:0]   s1_wbd_sel_o,
+    output  logic           s1_wbd_we_o,
+    output  logic           s1_wbd_cyc_o,
+    output  logic           s1_wbd_stb_o
+);
+
+    // Parameters for target IDs
+    parameter logic [3:0] TARGET_UART = 4'b0000;
+    parameter logic [3:0] TARGET_SRAM = 4'b0001;
+    parameter logic [3:0] INVALID_TARGET = 4'b1111;
+
+    // Internal signals for master write interfaces
+    typedef struct packed { 
+        logic [31:0] wbd_dat;
+        logic [31:0] wbd_adr;
+        logic [3:0]  wbd_sel;
+        logic        wbd_we;
+        logic        wbd_cyc;
+        logic        wbd_stb;
+        logic [3:0]  wbd_tid; // Target ID
+    } type_wb_wr_intf;
+
+    // Internal signals for master read interfaces
+    typedef struct packed { 
+        logic [31:0] wbd_dat;
+        logic        wbd_ack;
+        logic        wbd_err;
+    } type_wb_rd_intf;
+
+    // Master Write Interfaces
+    type_wb_wr_intf  m0_wb_wr;
+    type_wb_wr_intf  m1_wb_wr;
+
+    // Master Read Interfaces
+    type_wb_rd_intf  m0_wb_rd;
+    type_wb_rd_intf  m1_wb_rd;
+
+    // Slave Write Interfaces
+    type_wb_wr_intf  s0_wb_wr;
+    type_wb_wr_intf  s1_wb_wr;
+
+    // Slave Read Interfaces
+    type_wb_rd_intf  s0_wb_rd;
+    type_wb_rd_intf  s1_wb_rd;
+
+    // Multiplexed Master and Slave Interfaces
+    type_wb_wr_intf  m_bus_wr;  // Multiplexed Master Interface
+    type_wb_rd_intf  m_bus_rd;  // Multiplexed Slave Interface
+
+    // Grant signal from arbiter
+    logic gnt;
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Address Decoding for Masters
+    //
+
+    // Master 0 Address Decoding
+    always_comb begin
+        if (m0_wbd_cyc_i) begin
+//            if (m0_wbd_adr_i[31:16] == 16'hFF01)
+//                m0_wb_wr.wbd_tid = TARGET_UART; // Slave 0
+//            else if (m0_wbd_adr_i[31:16] == 16'hFFFF)
+//                m0_wb_wr.wbd_tid = TARGET_SRAM; // Slave 1
+				if (m0_wbd_adr_i[31:16] == 16'hFFFF)
+                m0_wb_wr.wbd_tid = TARGET_SRAM; // Slave 1
+            else
+                m0_wb_wr.wbd_tid = INVALID_TARGET; // Invalid Target
+        end else begin
+            m0_wb_wr.wbd_tid = INVALID_TARGET;
+        end
+    end
+
+    // Master 1 Address Decoding
+    always_comb begin
+        if (m1_wbd_cyc_i) begin
+            if (m1_wbd_adr_i[31:16] == 16'hFF01)
+                m1_wb_wr.wbd_tid = TARGET_UART; // Slave 0
+            else if (m1_wbd_adr_i[31:16] == 16'hFFFF)
+                m1_wb_wr.wbd_tid = TARGET_SRAM; // Slave 1
+            else
+                m1_wb_wr.wbd_tid = INVALID_TARGET; // Invalid Target
+        end else begin
+            m1_wb_wr.wbd_tid = INVALID_TARGET;
+        end
+    end
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Master Interface Mapping
+    //
+
+    // Mapping Master 0 Signals
+    always_comb begin
+        m0_wb_wr.wbd_dat = m0_wbd_dat_i;
+        m0_wb_wr.wbd_adr = m0_wbd_adr_i;
+        m0_wb_wr.wbd_sel = m0_wbd_sel_i;
+        m0_wb_wr.wbd_we  = m0_wbd_we_i;
+        m0_wb_wr.wbd_cyc = m0_wbd_cyc_i;
+        m0_wb_wr.wbd_stb = m0_wbd_stb_i;
+
+        m0_wbd_dat_o     = m0_wb_rd.wbd_dat;
+        m0_wbd_ack_o     = m0_wb_rd.wbd_ack;
+        m0_wbd_err_o     = m0_wb_rd.wbd_err;
+    end
+
+    // Mapping Master 1 Signals
+    always_comb begin
+        m1_wb_wr.wbd_dat = m1_wbd_dat_i;
+        m1_wb_wr.wbd_adr = m1_wbd_adr_i;
+        m1_wb_wr.wbd_sel = m1_wbd_sel_i;
+        m1_wb_wr.wbd_we  = m1_wbd_we_i;
+        m1_wb_wr.wbd_cyc = m1_wbd_cyc_i;
+        m1_wb_wr.wbd_stb = m1_wbd_stb_i;
+
+        m1_wbd_dat_o     = m1_wb_rd.wbd_dat;
+        m1_wbd_ack_o     = m1_wb_rd.wbd_ack;
+        m1_wb_rd.wbd_err = m1_wb_rd.wbd_err;
+    end
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Slave Interface Mapping
+    //
+
+    // Mapping Slave 0 Signals
+    always_comb begin
+        s0_wb_rd.wbd_dat = s0_wbd_dat_i;
+        s0_wb_rd.wbd_ack = s0_wbd_ack_i;
+        s0_wb_rd.wbd_err = 1'b0; // No error handling
+
+        s0_wbd_dat_o = s0_wb_wr.wbd_dat;
+        s0_wbd_adr_o = s0_wb_wr.wbd_adr;
+        s0_wbd_sel_o = s0_wb_wr.wbd_sel;
+        s0_wbd_we_o  = s0_wb_wr.wbd_we;
+        s0_wbd_cyc_o = s0_wb_wr.wbd_cyc;
+        s0_wbd_stb_o = s0_wb_wr.wbd_stb;
+    end
+
+    // Mapping Slave 1 Signals
+    always_comb begin
+        s1_wb_rd.wbd_dat = s1_wbd_dat_i;
+        s1_wb_rd.wbd_ack = s1_wbd_ack_i;
+        s1_wb_rd.wbd_err = 1'b0; // No error handling
+
+        s1_wbd_dat_o = s1_wb_wr.wbd_dat;
+        s1_wbd_adr_o = s1_wb_wr.wbd_adr;
+        s1_wbd_sel_o = s1_wb_wr.wbd_sel;
+        s1_wbd_we_o  = s1_wb_wr.wbd_we;
+        s1_wbd_cyc_o = s1_wb_wr.wbd_cyc;
+        s1_wbd_stb_o = s1_wb_wr.wbd_stb;
+    end
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Arbitration Logic
+    //
+
+    // Instantiate Arbiter
+    wb_arb_2m u_wb_arb (
+        .clk(clk_i), 
+        .rstn(rst_n),
+        .req({m1_wb_wr.wbd_cyc & ~m1_wbd_ack_o, m0_wb_wr.wbd_cyc & ~m0_wbd_ack_o}),
+        .gnt(gnt)
+    );
+
+    // Register for granted master's write interface
+    type_wb_wr_intf m_bus_wr_reg;
+
+    // Register for data from slave to master
+    type_wb_rd_intf m_bus_rd_reg;
+
+    // Master Write Interface Multiplexing
+    always_ff @(posedge clk_i or negedge rst_n) begin
+        if (!rst_n) begin
+            m_bus_wr_reg <= '0;
+        end else begin
+            case (gnt)
+                1'b0: m_bus_wr_reg <= m0_wb_wr;
+                1'b1: m_bus_wr_reg <= m1_wb_wr;
+                default: m_bus_wr_reg <= '0;
+            endcase
+        end
+    end
+
+    assign m_bus_wr = m_bus_wr_reg;
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Slave Selection and Response Handling
+    //
+
+    // Slave Read Interface Multiplexing
+    always_comb begin
+        case (m_bus_wr.wbd_tid)
+            TARGET_UART: m_bus_rd_reg = s0_wb_rd;
+            TARGET_SRAM: m_bus_rd_reg = s1_wb_rd;
+            default: m_bus_rd_reg = '{wbd_dat:32'hDEADBEEF, wbd_ack:1'b1, wbd_err:1'b1}; // Invalid target response
+        endcase
+    end
+
+    assign m_bus_rd = m_bus_rd_reg;
+
+    // Connecting Master Read Interfaces
+    always_ff @(posedge clk_i or negedge rst_n) begin
+        if (!rst_n) begin
+            m0_wb_rd <= '0;
+            m1_wb_rd <= '0;
+        end else begin
+            case (gnt)
+                1'b0: m0_wb_rd <= m_bus_rd;
+                1'b1: m1_wb_rd <= m_bus_rd;
+                default: begin
+                    m0_wb_rd <= '0;
+                    m1_wb_rd <= '0;
+                end
+            endcase
+        end
+    end
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Connecting Masters to Slaves
+    //
+
+    // Route master's write interface to the selected slave
+    always_ff @(posedge clk_i or negedge rst_n) begin
+        if (!rst_n) begin
+            s0_wb_wr <= '0;
+            s1_wb_wr <= '0;
+        end else begin
+            // Default assignments to prevent latches
+            s0_wb_wr <= '0;
+            s1_wb_wr <= '0;
+
+            case (m_bus_wr.wbd_tid)
+                TARGET_UART: s0_wb_wr <= m_bus_wr;
+                TARGET_SRAM: s1_wb_wr <= m_bus_wr;
+                default: begin
+                    s0_wb_wr <= '0;
+                    s1_wb_wr <= '0;
+                end
+            endcase
+        end
+    end
+
+endmodule

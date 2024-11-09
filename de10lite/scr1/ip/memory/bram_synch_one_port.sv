@@ -19,7 +19,7 @@ module bram_synch_one_port
 
     // Memory initialization (Note: Initial blocks are generally not synthesizable)
     initial begin
-        $readmemh("D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/scbl.mem", memory);
+        $readmemh("D:/fpga_project/ALTERA/scr1-sdk/fpga/de10lite/scr1/ip/scbl_final_rearranged.mem", memory);
     end
     
 

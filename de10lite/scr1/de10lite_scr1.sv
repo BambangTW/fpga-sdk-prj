@@ -254,8 +254,8 @@ end
 //=======================================================
 //  SCR1 Core's Processor Cluster
 //=======================================================
-scr1_top_ahb
-i_scr1 (
+
+scr1_top_wb u_scr1_top_wb (
         // Common
         .pwrup_rst_n                (pwrup_rst_n            ),
         .rst_n                      (hard_rst_n             ),
@@ -293,29 +293,89 @@ i_scr1 (
         .tdo_en                     (scr1_jtag_tdo_en       ),
 `endif//SCR1_DBG_EN
 
-        // Instruction Memory Interface
-        .imem_hprot                 (ahb_imem_hprot         ),
-        .imem_hburst                (ahb_imem_hburst        ),
-        .imem_hsize                 (ahb_imem_hsize         ),
-        .imem_htrans                (ahb_imem_htrans        ),
-        .imem_hmastlock             (                       ),
-        .imem_haddr                 (ahb_imem_haddr         ),
-        .imem_hready                (ahb_imem_hready        ),
-        .imem_hrdata                (ahb_imem_hrdata        ),
-        .imem_hresp                 (ahb_imem_hresp         ),
-        // Data Memory Interface
-        .dmem_hprot                 (ahb_dmem_hprot         ),
-        .dmem_hburst                (ahb_dmem_hburst        ),
-        .dmem_hsize                 (ahb_dmem_hsize         ),
-        .dmem_htrans                (ahb_dmem_htrans        ),
-        .dmem_hmastlock             (                       ),
-        .dmem_haddr                 (ahb_dmem_haddr         ),
-        .dmem_hwrite                (ahb_dmem_hwrite        ),
-        .dmem_hwdata                (ahb_dmem_hwdata        ),
-        .dmem_hready                (ahb_dmem_hready        ),
-        .dmem_hrdata                (ahb_dmem_hrdata        ),
-        .dmem_hresp                 (ahb_dmem_hresp         )
+    // Instruction Memory Interface
+    .wbd_imem_stb_o     (wb_imem_stb_i),
+    .wbd_imem_adr_o     (wb_imem_adr_i),
+    .wbd_imem_we_o      (wb_imem_we_i),
+    .wbd_imem_dat_o     (wb_imem_dat_i),
+    .wbd_imem_sel_o     (wb_imem_sel_i),
+    .wbd_imem_dat_i     (wb_imem_dat_o),
+    .wbd_imem_ack_i     (wb_imem_ack_o),
+    .wbd_imem_err_i     (wb_imem_err_o),
+
+    // Data Memory Interface
+    .wbd_dmem_stb_o     (wb_dmem_stb_i),
+    .wbd_dmem_adr_o     (wb_dmem_adr_i),
+    .wbd_dmem_we_o      (wb_dmem_we_i),
+    .wbd_dmem_dat_o     (wb_dmem_dat_i),
+    .wbd_dmem_sel_o     (wb_dmem_sel_i),
+    .wbd_dmem_dat_i     (wb_dmem_dat_o),
+    .wbd_dmem_ack_i     (wb_dmem_ack_o),
+    .wbd_dmem_err_i     (wb_dmem_err_o)
 );
+
+// scr1_top_ahb
+// i_scr1 (
+//         // Common
+//         .pwrup_rst_n                (pwrup_rst_n            ),
+//         .rst_n                      (hard_rst_n             ),
+//         .cpu_rst_n                  (cpu_rst_n              ),
+//         .test_mode                  (1'b0                   ),
+//         .test_rst_n                 (1'b1                   ),
+//         .clk                        (cpu_clk                ),
+//         .rtc_clk                    (1'b0                   ),
+// `ifdef SCR1_DBG_EN
+//         .sys_rst_n_o                (sys_rst_n              ),
+//         .sys_rdc_qlfy_o             (                       ),
+// `endif // SCR1_DBG_EN
+
+//         // Fuses
+//         .fuse_mhartid               ('0                     ),
+// `ifdef SCR1_DBG_EN
+//         .fuse_idcode                (`SCR1_TAP_IDCODE       ),
+// `endif // SCR1_DBG_EN
+
+//         // IRQ
+// `ifdef SCR1_IPIC_EN
+//         .irq_lines                  (scr1_irq               ),
+// `else
+//         .ext_irq                    (scr1_irq             ),
+// `endif//SCR1_IPIC_EN
+//         .soft_irq                   ('0                     ),
+
+// `ifdef SCR1_DBG_EN
+//         // Debug Interface - JTAG I/F
+//         .trst_n                     (scr1_jtag_trst_n       ),
+//         .tck                        (scr1_jtag_tck          ),
+//         .tms                        (scr1_jtag_tms          ),
+//         .tdi                        (scr1_jtag_tdi          ),
+//         .tdo                        (scr1_jtag_tdo_int      ),
+//         .tdo_en                     (scr1_jtag_tdo_en       ),
+// `endif//SCR1_DBG_EN
+
+//         // Instruction Memory Interface
+//         .imem_hprot                 (ahb_imem_hprot         ),
+//         .imem_hburst                (ahb_imem_hburst        ),
+//         .imem_hsize                 (ahb_imem_hsize         ),
+//         .imem_htrans                (ahb_imem_htrans        ),
+//         .imem_hmastlock             (                       ),
+//         .imem_haddr                 (ahb_imem_haddr         ),
+//         .imem_hready                (ahb_imem_hready        ),
+//         .imem_hrdata                (ahb_imem_hrdata        ),
+//         .imem_hresp                 (ahb_imem_hresp         ),
+//         // Data Memory Interface
+//         .dmem_hprot                 (ahb_dmem_hprot         ),
+//         .dmem_hburst                (ahb_dmem_hburst        ),
+//         .dmem_hsize                 (ahb_dmem_hsize         ),
+//         .dmem_htrans                (ahb_dmem_htrans        ),
+//         .dmem_hmastlock             (                       ),
+//         .dmem_haddr                 (ahb_dmem_haddr         ),
+//         .dmem_hwrite                (ahb_dmem_hwrite        ),
+//         .dmem_hwdata                (ahb_dmem_hwdata        ),
+//         .dmem_hready                (ahb_dmem_hready        ),
+//         .dmem_hrdata                (ahb_dmem_hrdata        ),
+//         .dmem_hresp                 (ahb_dmem_hresp         )
+// );
 
 `ifdef SCR1_IPIC_EN
 assign scr1_irq = {31'd0, uart_irq};
@@ -353,8 +413,8 @@ i_uart(
     .wb_clk_i       (cpu_clk                ),
     // Wishbone signals
     .wb_rst_i       (~soc_rst_n             ),
-    .wb_adr_i       (uart_wbd_adr_o         ),
-    .wb_dat_i       (uart_wbd_dat_o         ),
+    .wb_adr_i       (uart_wbd_adr_o[4:2]         ),
+    .wb_dat_i       (uart_wbd_dat_o[7:0]         ),
     .wb_dat_o       (uart_wbd_dat_i         ),
     .wb_we_i        (uart_wbd_we_o          ),
     .wb_stb_i       (uart_wbd_stb_o         ),
@@ -381,69 +441,6 @@ logic        wb_imem_we_i, wb_imem_cyc_i, wb_imem_stb_i;
 logic [31:0] wb_imem_dat_o;
 logic        wb_imem_ack_o, wb_imem_err_o;
 
-//==========================================================
-// AHB3-Lite to Wishbone bridge for I-MEM Bridge
-//==========================================================
-
-ahb3lite_to_wb u_ahb3lite_to_wb_imem (
-    .clk_i(cpu_clk),               // Clock signal
-    .rst_n_i(soc_rst_n),      // Reset signal (active-low)
-
-    // AHB3-Lite interface for IMEM
-    .sHADDR(ahb_imem_haddr),         
-    .sHWDATA(1'b0),       
-    .sHWRITE(1'b0),       
-    .sHSIZE(ahb_imem_hsize),         
-    .sHBURST(ahb_imem_hburst),       
-    .sHSEL(1'b1),  // Always selected
-    .sHTRANS(ahb_imem_htrans),       
-    .sHREADY(1'b1),       
-    .sHPROT(ahb_imem_hprot),         
-    .sHREADYOUT(ahb_imem_hready),    
-    .sHRDATA(ahb_imem_hrdata),       
-    .sHRESP(ahb_imem_hresp),         
-
-    // Wishbone interface for IMEM
-    .to_wb_dat_i(wb_imem_dat_i),    
-    .to_wb_adr_i(wb_imem_adr_i),    
-    .to_wb_sel_i(wb_imem_sel_i),    
-    .to_wb_we_i(wb_imem_we_i),      
-    .to_wb_cyc_i(wb_imem_cyc_i),    
-    .to_wb_stb_i(wb_imem_stb_i),    
-    .from_wb_dat_o(wb_imem_dat_o),  
-    .from_wb_ack_o(wb_imem_ack_o),  
-    .from_wb_err_o(wb_imem_err_o)   
-);
-
-//==========================================================
-// AHB I-MEM Bridge
-//==========================================================
-ahb_avalon_bridge
-i_ahb_imem (
-        // avalon master side
-        .clk                        (cpu_clk                ),
-        .reset_n                    (soc_rst_n              ),
-        .write                      (avl_imem_write         ),
-        .read                       (avl_imem_read          ),
-        .waitrequest                (avl_imem_waitrequest   ),
-        .address                    (avl_imem_address       ),
-        .byteenable                 (avl_imem_byteenable    ),
-        .writedata                  (avl_imem_writedata     ),
-        .readdatavalid              (avl_imem_readdatavalid ),
-        .readdata                   (avl_imem_readdata      ),
-        .response                   (avl_imem_response      ),
-        // ahb slave side
-        .HRDATA                     (),
-        .HRESP                      (),
-        .HSIZE                      (),
-        .HTRANS                     (),
-        .HPROT                      (),
-        .HADDR                      (),
-        .HWDATA                     ('0                     ),
-        .HWRITE                     ('0                     ),
-        .HREADY                     ()
-);
-
 // Wishbone interface signals for DMEM
 logic [31:0] wb_dmem_dat_i, wb_dmem_adr_i;
 logic [3:0]  wb_dmem_sel_i;
@@ -451,68 +448,6 @@ logic        wb_dmem_we_i, wb_dmem_cyc_i, wb_dmem_stb_i;
 logic [31:0] wb_dmem_dat_o;
 logic        wb_dmem_ack_o, wb_dmem_err_o;
 
-//==========================================================
-// AHB3-Lite to Wishbone bridge for D-MEM Bridge
-//==========================================================
-
-ahb3lite_to_wb u_ahb3lite_to_wb_dmem (
-    .clk_i(cpu_clk),               // Clock signal
-    .rst_n_i(soc_rst_n),      // Reset signal (active-low)
-
-    // AHB3-Lite interface for DMEM
-    .sHADDR(ahb_dmem_haddr),         
-    .sHWDATA(ahb_dmem_hwdata),       
-    .sHWRITE(ahb_dmem_hwrite),       
-    .sHSIZE(ahb_dmem_hsize),         
-    .sHBURST(ahb_dmem_hburst),       
-    .sHSEL(1'b1),  // Always selected
-    .sHTRANS(ahb_dmem_htrans),       
-    .sHREADY(1'b1),       
-    .sHPROT(ahb_dmem_hprot),         
-    .sHREADYOUT(ahb_dmem_hready),    
-    .sHRDATA(ahb_dmem_hrdata),       
-    .sHRESP(ahb_dmem_hresp),         
-
-    // Wishbone interface for DMEM
-    .to_wb_dat_i(wb_dmem_dat_i),    
-    .to_wb_adr_i(wb_dmem_adr_i),    
-    .to_wb_sel_i(wb_dmem_sel_i),    
-    .to_wb_we_i(wb_dmem_we_i),      
-    .to_wb_cyc_i(wb_dmem_cyc_i),    
-    .to_wb_stb_i(wb_dmem_stb_i),    
-    .from_wb_dat_o(wb_dmem_dat_o),  
-    .from_wb_ack_o(wb_dmem_ack_o),  
-    .from_wb_err_o(wb_dmem_err_o)   
-);
-
-//==========================================================
-// AHB D-MEM Bridge
-//==========================================================
-ahb_avalon_bridge
-i_ahb_dmem (
-        // avalon master side
-        .clk                        (cpu_clk                ),
-        .reset_n                    (soc_rst_n              ),
-        .write                      (avl_dmem_write         ),
-        .read                       (avl_dmem_read          ),
-        .waitrequest                (avl_dmem_waitrequest   ),
-        .address                    (avl_dmem_address       ),
-        .byteenable                 (avl_dmem_byteenable    ),
-        .writedata                  (avl_dmem_writedata     ),
-        .readdatavalid              (avl_dmem_readdatavalid ),
-        .readdata                   (avl_dmem_readdata      ),
-        .response                   (avl_dmem_response      ),
-        // ahb slave side
-        .HRDATA                     (),
-        .HRESP                      (),
-        .HSIZE                      (),
-        .HTRANS                     (),
-        .HPROT                      (),
-        .HADDR                      (),
-        .HWDATA                     (),
-        .HWRITE                     (),
-        .HREADY                     ()
-);
 
 //=======================================================
 // Instantiation of wishbone_bram_wrapper
@@ -597,7 +532,7 @@ bram32_wishbone_wrapper bram32_inst (
 //=======================================================
 // Instantiate the Wishbone Interconnect module
 //=======================================================
-    wb_interconnect_2m2s u_wb_interconnect_2m2s (
+    wb_interconnect_2m2s_NEW u_wb_interconnect_2m2s (
         .clk_i(cpu_clk),
         .rst_n(soc_rst_n),
         // Master 0 Interface
@@ -605,7 +540,7 @@ bram32_wishbone_wrapper bram32_inst (
         .m0_wbd_adr_i(wb_imem_adr_i),
         .m0_wbd_sel_i(wb_imem_sel_i),
         .m0_wbd_we_i(wb_imem_we_i),
-        .m0_wbd_cyc_i(wb_imem_cyc_i),
+        .m0_wbd_cyc_i(wb_imem_stb_i),
         .m0_wbd_stb_i(wb_imem_stb_i),
         .m0_wbd_dat_o(wb_imem_dat_o),
         .m0_wbd_ack_o(wb_imem_ack_o),
@@ -615,7 +550,7 @@ bram32_wishbone_wrapper bram32_inst (
         .m1_wbd_adr_i(wb_dmem_adr_i),
         .m1_wbd_sel_i(wb_dmem_sel_i),
         .m1_wbd_we_i(wb_dmem_we_i),
-        .m1_wbd_cyc_i(wb_dmem_cyc_i),
+        .m1_wbd_cyc_i(wb_dmem_stb_i),
         .m1_wbd_stb_i(wb_dmem_stb_i),
         .m1_wbd_dat_o(wb_dmem_dat_o),
         .m1_wbd_ack_o(wb_dmem_ack_o),
@@ -727,8 +662,12 @@ assign JTAG_TDO             = (scr1_jtag_tdo_en) ? scr1_jtag_tdo_int : 1'bZ;
 // LEDs
 //==========================================================
 // assign LEDR[7:0]    =  pio_led;
-assign LEDR[0]      = wb_imem_err_o;
-assign LEDR[1]      = wb_dmem_err_o;
+assign LEDR[0]      = wb_imem_ack_o;
+assign LEDR[1]      = wb_dmem_ack_o;
+assign LEDR[2]		  = uart_wbd_cyc_o;
+assign LEDR[3]		  = uart_wbd_ack_i;
+assign LEDR[4]		  = wb_bram_cyc;
+assign LEDR[5]		  = wb_bram_ack;
 assign LEDR[8]      = ~hard_rst_n;
 assign LEDR[9]      =  heartbeat;
 assign {HEX1,HEX0}  =  pio_hex_1_0;
