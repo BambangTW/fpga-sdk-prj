@@ -556,14 +556,14 @@ bram32_wishbone_wrapper bram32_inst (
         .m1_wbd_ack_o(wb_dmem_ack_o),
         .m1_wbd_err_o(wb_dmem_err_o),
         // Slave 0 Interface (UART)
-        .s0_wbd_dat_i(uart_wbd_dat_i),
-        .s0_wbd_ack_i(uart_wbd_ack_i),
-        .s0_wbd_dat_o(uart_wbd_dat_o),
-        .s0_wbd_adr_o(uart_wbd_adr_o),
-        .s0_wbd_sel_o(uart_wbd_sel_o),
-        .s0_wbd_we_o(uart_wbd_we_o),
-        .s0_wbd_cyc_o(uart_wbd_cyc_o),
-        .s0_wbd_stb_o(uart_wbd_stb_o),
+        .s0_wbd_dat_i(wb_gpio_dat_o),
+        .s0_wbd_ack_i(wb_gpio_ack),
+        .s0_wbd_dat_o(wb_gpio_dat_i),
+        .s0_wbd_adr_o(wb_gpio_adr),
+        .s0_wbd_sel_o(),
+        .s0_wbd_we_o(wb_gpio_we),
+        .s0_wbd_cyc_o(wb_gpio_cyc),
+        .s0_wbd_stb_o(wb_gpio_stb),
         // Slave 1 Interface (SRAM)
         .s1_wbd_dat_i(wb_bram_rdata),
         .s1_wbd_ack_i(wb_bram_ack),
@@ -574,6 +574,36 @@ bram32_wishbone_wrapper bram32_inst (
         .s1_wbd_cyc_o(wb_bram_cyc),
         .s1_wbd_stb_o(wb_bram_stb)
     );
+
+//=======================================================
+//  SIMPLE WISHBONE GPIO
+//=======================================================
+
+// Internal signals with specified directions
+logic        wb_gpio_cyc;    // WISHBONE cycle signal
+logic        wb_gpio_stb;    // WISHBONE strobe signal
+logic        wb_gpio_adr;    // WISHBONE address bit
+logic        wb_gpio_we;     // WISHBONE write enable
+logic [7:0]  wb_gpio_dat_i;  // Data input from WISHBONE
+logic [7:0]  wb_gpio_dat_o;  // Data output to WISHBONE
+logic        wb_gpio_ack;    // Acknowledge signal
+wire [7:0]  gpio_bus;       // Bidirectional GPIO bus
+
+// Instantiation of the simple_gpio module
+simple_gpio #(
+    .io(8)  // Set the parameter for the number of GPIOs (max 8)
+) u_simple_gpio (
+    .clk_i(cpu_clk),       // Connect clock
+    .rst_i(soc_rst_n),       // Connect reset
+    .cyc_i(wb_gpio_cyc),       // Connect cycle signal
+    .stb_i(wb_gpio_stb),       // Connect strobe signal
+    .adr_i(wb_gpio_adr),       // Connect address signal
+    .we_i(wb_gpio_we),         // Connect write enable
+    .dat_i(wb_gpio_dat_i),     // Connect data input
+    .dat_o(wb_gpio_dat_o),     // Connect data output
+    .ack_o(wb_gpio_ack),       // Connect acknowledge
+    .gpio(gpio_bus)            // Connect GPIO pins
+);
 
 //=======================================================
 //  FPGA Platform's System-on-Programmable-Chip (SOPC)
@@ -662,12 +692,14 @@ assign JTAG_TDO             = (scr1_jtag_tdo_en) ? scr1_jtag_tdo_int : 1'bZ;
 // LEDs
 //==========================================================
 // assign LEDR[7:0]    =  pio_led;
-assign LEDR[0]      = wb_imem_ack_o;
-assign LEDR[1]      = wb_dmem_ack_o;
-assign LEDR[2]		  = uart_wbd_cyc_o;
-assign LEDR[3]		  = uart_wbd_ack_i;
-assign LEDR[4]		  = wb_bram_cyc;
-assign LEDR[5]		  = wb_bram_ack;
+//assign LEDR[0]      = wb_imem_ack_o;
+//assign LEDR[1]      = wb_dmem_ack_o;
+//assign LEDR[2]		  = uart_wbd_cyc_o;
+//assign LEDR[3]		  = uart_wbd_ack_i;
+//assign LEDR[4]		  = wb_bram_cyc;
+//assign LEDR[5]		  = wb_bram_ack;
+
+assign LEDR[7:0] 	  =  gpio_bus;
 assign LEDR[8]      = ~hard_rst_n;
 assign LEDR[9]      =  heartbeat;
 assign {HEX1,HEX0}  =  pio_hex_1_0;
