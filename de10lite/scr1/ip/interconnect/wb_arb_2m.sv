@@ -1,48 +1,68 @@
-`timescale 1ns / 1ps
+//==============================================================================
+// Project      : Wishbone Arbiter Design
+// File Name    : wb_arb_2m.sv
+// Author       : Bambang T. Wibowo
+// Date         : 2024-11-18
+// Description  : 2 Master - 2 Slave Wishbone Interconnect with Arbitration
+//==============================================================================
+// Revision History
+//------------------------------------------------------------------------------
+// Version  | Author      | Date       | Changes
+//----------|-------------|------------|----------------------------------------
+// 1.0      | Bambang T.W.| 2024-11-18 | Initial creation
+//==============================================================================
 
 module wb_arb_2m (
-    input  logic       clk,
-    input  logic       rstn,
-    input  logic [1:0] req,   // Request inputs from two masters
-    output logic       gnt    // Grant output (1-bit since we have two masters)
+    input       clk,
+    input       rstn,
+    input [1:0] req,    // Request input from 2 masters
+    output      gnt     // Grant output (1 bit for 2 masters)
 );
 
-    // Parameters for state encoding
-    parameter [0:0]
-        grant0 = 1'b0,
-        grant1 = 1'b1;
+///////////////////////////////////////////////////////////////////
+// Parameters
+///////////////////////////////////////////////////////////////////
 
-    // State registers
-    logic state, next_state;
+parameter grant0 = 1'b0;
+parameter grant1 = 1'b1;
 
-    // Assign grant output
-    assign gnt = state;
+///////////////////////////////////////////////////////////////////
+// Local Registers and Wires
+///////////////////////////////////////////////////////////////////
 
-    // State transition logic
-    always @(posedge clk or negedge rstn) begin
-        if (!rstn)
-            state <= grant0;
-        else
-            state <= next_state;
-    end
+reg state, next_state;
 
-    // Next state logic implementing simple round-robin arbitration
-    always @(*) begin
-        next_state = state; // Default: stay in current state
-        case (state)
-            grant0: begin
-                if (!req[0]) begin
-                    if (req[1])
-                        next_state = grant1;
-                end
+///////////////////////////////////////////////////////////////////
+// Assign Grant
+///////////////////////////////////////////////////////////////////
+
+assign gnt = state;
+
+always @(posedge clk or negedge rstn)
+    if (!rstn)
+        state <= grant0;
+    else
+        state <= next_state;
+
+///////////////////////////////////////////////////////////////////
+// Next State Logic
+// Implements round-robin arbitration algorithm
+///////////////////////////////////////////////////////////////////
+
+always @(*) begin
+    next_state = state; // Default keep current state
+    case (state)
+        grant0:
+            if (!req[0]) begin
+                if (req[1])
+                    next_state = grant1;
             end
-            grant1: begin
-                if (!req[1]) begin
-                    if (req[0])
-                        next_state = grant0;
-                end
+        grant1:
+            if (!req[1]) begin
+                if (req[0])
+                    next_state = grant0;
             end
-        endcase
-    end
+    endcase
+end
 
 endmodule

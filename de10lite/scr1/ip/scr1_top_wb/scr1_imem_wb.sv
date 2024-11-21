@@ -154,18 +154,16 @@ assign imem_req_ack = ~req_fifo_full;
 
 assign req_fifo_din.haddr = imem_addr;
 
-    sync_fifo #(
-        .W  (SCR1_WB_WIDTH), // Data width
-        .DP (4)  // FIFO depth
-    ) u_req_fifo (
+    sync_fifo u_req_fifo (
         .clk      (core_clk),       // Clock input
         .reset_n  (core_rst_n),   // Active-low reset
         .wr_en    (req_fifo_wr),     // Write enable
-        .rd_en    (req_fifo_rd),     // Read enable
         .wr_data  (req_fifo_din),   // Data input
-        .rd_data  (req_fifo_dout),   // Data output
         .full     (req_fifo_full),      // Full flag
-        .empty    (req_fifo_empty)      // Empty flag
+        .empty    (req_fifo_empty),      // Empty flag
+        .rd_en    (req_fifo_rd),     // Read enable
+        .rd_data  (req_fifo_dout)   // Data output
+        
     );
 
 //  async_fifo #(
@@ -214,18 +212,15 @@ type_scr1_resp_fifo_s                       resp_fifo_dout;
 assign resp_fifo_din.hresp  = (wbd_err_i) ? 1'b0 : 1'b1;
 assign resp_fifo_din.hrdata = wbd_dat_i;
 
-    sync_fifo #(
-        .W  (SCR1_WB_WIDTH+1), // Data width
-        .DP (4)  // FIFO depth
-    ) u_res_fifo (
+    sync_fifo u_res_fifo (
         .clk      (core_clk),       // Clock input
         .reset_n  (core_rst_n),   // Active-low reset
         .wr_en    (wbd_ack_i),     // Write enable
-        .rd_en    (resp_fifo_rd),     // Read enable
         .wr_data  (resp_fifo_din),   // Data input
-        .rd_data  (resp_fifo_dout),   // Data output
         .full     (             ),      // Full flag
-        .empty    (resp_fifo_empty)      // Empty flag
+        .empty    (resp_fifo_empty),      // Empty flag
+        .rd_en    (resp_fifo_rd),     // Read enable
+        .rd_data  (resp_fifo_dout)   // Data output
     );
 
 //  async_fifo #(

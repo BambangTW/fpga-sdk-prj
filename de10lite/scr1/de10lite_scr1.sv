@@ -532,7 +532,7 @@ bram32_wishbone_wrapper bram32_inst (
 //=======================================================
 // Instantiate the Wishbone Interconnect module
 //=======================================================
-    wb_interconnect_2m2s_NEW u_wb_interconnect_2m2s (
+    wb_interconnect_2m2s u_wb_interconnect_2m2s (
         .clk_i(cpu_clk),
         .rst_n(soc_rst_n),
         // Master 0 Interface
@@ -582,28 +582,43 @@ bram32_wishbone_wrapper bram32_inst (
 // Internal signals with specified directions
 logic        wb_gpio_cyc;    // WISHBONE cycle signal
 logic        wb_gpio_stb;    // WISHBONE strobe signal
-logic        wb_gpio_adr;    // WISHBONE address bit
+logic [31:0] wb_gpio_adr;    // WISHBONE address bit
 logic        wb_gpio_we;     // WISHBONE write enable
-logic [7:0]  wb_gpio_dat_i;  // Data input from WISHBONE
-logic [7:0]  wb_gpio_dat_o;  // Data output to WISHBONE
+logic [31:0] wb_gpio_dat_i;  // Data input from WISHBONE
+logic [31:0] wb_gpio_dat_o;  // Data output to WISHBONE
 logic        wb_gpio_ack;    // Acknowledge signal
-wire [7:0]  gpio_bus;       // Bidirectional GPIO bus
+logic [7:0]  gpio_bus;       // Bidirectional GPIO bus
 
-// Instantiation of the simple_gpio module
-simple_gpio #(
-    .io(8)  // Set the parameter for the number of GPIOs (max 8)
-) u_simple_gpio (
-    .clk_i(cpu_clk),       // Connect clock
-    .rst_i(soc_rst_n),       // Connect reset
-    .cyc_i(wb_gpio_cyc),       // Connect cycle signal
-    .stb_i(wb_gpio_stb),       // Connect strobe signal
-    .adr_i(wb_gpio_adr),       // Connect address signal
-    .we_i(wb_gpio_we),         // Connect write enable
-    .dat_i(wb_gpio_dat_i),     // Connect data input
-    .dat_o(wb_gpio_dat_o),     // Connect data output
-    .ack_o(wb_gpio_ack),       // Connect acknowledge
-    .gpio(gpio_bus)            // Connect GPIO pins
-);
+// // Instantiation of the simple_gpio module
+// simple_gpio #(
+//     .io(8)  // Set the parameter for the number of GPIOs (max 8)
+// ) u_simple_gpio (
+//     .clk_i(cpu_clk),       // Connect clock
+//     .rstn_i(soc_rst_n),       // Connect reset
+//     .cyc_i(wb_gpio_cyc),       // Connect cycle signal
+//     .stb_i(wb_gpio_stb),       // Connect strobe signal
+//     .adr_i(wb_gpio_adr),       // Connect address signal
+//     .we_i(wb_gpio_we),         // Connect write enable
+//     .dat_i(wb_gpio_dat_i),     // Connect data input
+//     .dat_o(wb_gpio_dat_o),     // Connect data output
+//     .ack_o(wb_gpio_ack),       // Connect acknowledge
+//     .gpio(gpio_bus)            // Connect GPIO pins
+// );
+
+// Instantiation of the wishbone GPO module
+//wb_gpo #(
+//    .W(8)  // Set the parameter for the data width (default is 8)
+//) u_wb_gpo (
+//    .clk_i(cpu_clk),       // Connect clock
+//    .reset_n(soc_rst_n),       // Connect reset
+//    .stb_i(wb_gpio_stb),       // Connect cycle signal
+//    .we_i(wb_gpio_we),       // Connect strobe signal
+//    .adr_i(wb_gpio_adr),       // Connect address signal
+//    .dat_i(wb_gpio_dat_i),         // Connect write enable
+//    .dat_o(wb_gpio_dat_o),     // Connect data input
+//    .ack_o(wb_gpio_ack),        // Connect acknowledge
+//    .gpo_o(gpio_bus)          // Connect GPIO pins
+//);
 
 //=======================================================
 //  FPGA Platform's System-on-Programmable-Chip (SOPC)
@@ -692,17 +707,25 @@ assign JTAG_TDO             = (scr1_jtag_tdo_en) ? scr1_jtag_tdo_int : 1'bZ;
 // LEDs
 //==========================================================
 // assign LEDR[7:0]    =  pio_led;
-//assign LEDR[0]      = wb_imem_ack_o;
-//assign LEDR[1]      = wb_dmem_ack_o;
-//assign LEDR[2]		  = uart_wbd_cyc_o;
-//assign LEDR[3]		  = uart_wbd_ack_i;
-//assign LEDR[4]		  = wb_bram_cyc;
-//assign LEDR[5]		  = wb_bram_ack;
+assign HEX0[0]      = ~wb_imem_ack_o;
+assign HEX0[1]      = ~wb_dmem_ack_o;
+assign HEX0[2]		  = ~wb_gpio_stb;
+assign HEX0[3]		  = ~wb_gpio_ack;
+assign HEX0[4]		  = ~wb_bram_cyc;
+assign HEX0[5]		  = ~wb_bram_ack;
+assign HEX0[6]		  = ~1'b0;
+assign HEX0[7]		  = ~1'b0;
+
+assign HEX1[0]		  = ~wb_imem_stb_i;
+assign HEX1[1]		  = ~wb_imem_err_o;
+assign HEX1[2]		  = ~wb_dmem_stb_i;
+assign HEX1[3]		  = ~wb_dmem_err_o;
+assign HEX1[7:4]	  = ~1'b0;
 
 assign LEDR[7:0] 	  =  gpio_bus;
 assign LEDR[8]      = ~hard_rst_n;
 assign LEDR[9]      =  heartbeat;
-assign {HEX1,HEX0}  =  pio_hex_1_0;
+//assign {HEX1,HEX0}  =  pio_hex_1_0;
 assign {HEX3,HEX2}  =  pio_hex_3_2;
 assign {HEX5,HEX4}  =  pio_hex_5_4;
 

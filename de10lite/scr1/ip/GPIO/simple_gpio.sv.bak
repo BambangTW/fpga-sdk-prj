@@ -89,7 +89,7 @@ module simple_gpio #(
     parameter io = 8   // number of GPIOs, with a max of 8
 )(
     input  logic        clk_i,         // clock
-    input  logic        rstn_i,         // asynchronous active low reset
+    input  logic        rst_i,         // asynchronous active low reset
     input  logic        cyc_i,         // cycle signal
     input  logic        stb_i,         // strobe signal
     input  logic        adr_i,         // address bit (adr_i[1])
@@ -110,8 +110,8 @@ module simple_gpio #(
     wire wb_wr  = wb_acc & we_i;       // WISHBONE write access signal
 
     // Control and Line register write logic
-    always_ff @(posedge clk_i or negedge rstn_i) begin
-        if (!rstn_i) begin
+    always_ff @(posedge clk_i or negedge rst_i) begin
+        if (!rst_i) begin
             ctrl <= {io{1'b0}};        // Reset control register to input (0)
             line <= {io{1'b0}};        // Reset line register to 0
         end else if (wb_wr) begin
@@ -131,8 +131,8 @@ module simple_gpio #(
     end
 
     // Acknowledge signal generation
-    always_ff @(posedge clk_i or negedge rstn_i) begin
-        if (!rstn_i)
+    always_ff @(posedge clk_i or negedge rst_i) begin
+        if (!rst_i)
             ack_o <= 1'b0;
         else
             ack_o <= wb_acc & !ack_o; // Assert ACK for one cycle after a transaction

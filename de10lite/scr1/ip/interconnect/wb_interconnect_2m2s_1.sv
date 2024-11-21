@@ -1,22 +1,24 @@
+`timescale 1ns / 1ps
+
 module wb_interconnect_2m2s (
     input logic        clk_i, 
     input logic        rst_n,
 
     // Master 0 Interface
     input   logic	[31:0]	m0_wbd_dat_i,
-    input   logic      [31:0]	m0_wbd_adr_i,
-    input   logic      [3:0]	m0_wbd_sel_i,
+    input   logic   [31:0]	m0_wbd_adr_i,
+    input   logic   [3:0]	m0_wbd_sel_i,
     input   logic  	        m0_wbd_we_i,
     input   logic  	        m0_wbd_cyc_i,
     input   logic  	        m0_wbd_stb_i,
     output  logic	[31:0]	m0_wbd_dat_o,
-    output  logic		        m0_wbd_ack_o,
-    output  logic		        m0_wbd_err_o,
+    output  logic		    m0_wbd_ack_o,
+    output  logic		    m0_wbd_err_o,
     
     // Master 1 Interface
     input	logic [31:0]	m1_wbd_dat_i,
     input	logic [31:0]	m1_wbd_adr_i,
-    input	logic [3:0]	m1_wbd_sel_i,
+    input	logic [3:0]	    m1_wbd_sel_i,
     input	logic 	        m1_wbd_we_i,
     input	logic 	        m1_wbd_cyc_i,
     input	logic 	        m1_wbd_stb_i,
@@ -29,7 +31,7 @@ module wb_interconnect_2m2s (
     input	logic 	        s0_wbd_ack_i,
     output	logic [31:0]	s0_wbd_dat_o,
     output	logic [31:0]	s0_wbd_adr_o,
-    output	logic [3:0]	s0_wbd_sel_o,
+    output	logic [3:0]	    s0_wbd_sel_o,
     output	logic 	        s0_wbd_we_o,
     output	logic 	        s0_wbd_cyc_o,
     output	logic 	        s0_wbd_stb_o,
@@ -39,7 +41,7 @@ module wb_interconnect_2m2s (
     input	logic 	        s1_wbd_ack_i,
     output	logic [31:0]	s1_wbd_dat_o,
     output	logic [31:0]	s1_wbd_adr_o,
-    output	logic [3:0]	s1_wbd_sel_o,
+    output	logic [3:0]	    s1_wbd_sel_o,
     output	logic 	        s1_wbd_we_o,
     output	logic 	        s1_wbd_cyc_o,
     output	logic 	        s1_wbd_stb_o
@@ -97,10 +99,12 @@ type_wb_rd_intf  m_bus_rd;  // Multiplexed Slave Interface
 
 // Address Decoding
 always_comb begin
-    if (m0_wbd_adr_i[31:16] == 16'hFF01)
-        m0_wb_wr.wbd_tid = TARGET_UART; // Slave 0
-    else if (m0_wbd_adr_i[31:16] == 16'hFFFF)
-        m0_wb_wr.wbd_tid = TARGET_SRAM; // Slave 1
+   if (m0_wbd_adr_i[31:16] == 16'hFF01)
+       m0_wb_wr.wbd_tid = TARGET_UART; // Slave 0
+   else if (m0_wbd_adr_i[31:16] == 16'hFFFF)
+       m0_wb_wr.wbd_tid = TARGET_SRAM; // Slave 1
+	//  if (m0_wbd_adr_i[31:16] == 16'hFFFF)
+    //     m0_wb_wr.wbd_tid = TARGET_SRAM; // Slave 1
     else
         m0_wb_wr.wbd_tid = 4'b1111; // Invalid Target
 end
@@ -210,88 +214,88 @@ endmodule
 // instantiation example for the wb_interconnect_2m2s
 ////////////////////////////////////////////////////////////////////
 
-// Master 0 Signals
-    logic [31:0] m0_wbd_dat_i;
-    logic [31:0] m0_wbd_adr_i;
-    logic [3:0]  m0_wbd_sel_i;
-    logic        m0_wbd_we_i;
-    logic        m0_wbd_cyc_i;
-    logic        m0_wbd_stb_i;
-    logic [31:0] m0_wbd_dat_o;
-    logic        m0_wbd_ack_o;
-    logic        m0_wbd_err_o;
+// // Master 0 Signals
+//     logic [31:0] m0_wbd_dat_i;
+//     logic [31:0] m0_wbd_adr_i;
+//     logic [3:0]  m0_wbd_sel_i;
+//     logic        m0_wbd_we_i;
+//     logic        m0_wbd_cyc_i;
+//     logic        m0_wbd_stb_i;
+//     logic [31:0] m0_wbd_dat_o;
+//     logic        m0_wbd_ack_o;
+//     logic        m0_wbd_err_o;
 
-    // Master 1 Signals
-    logic [31:0] m1_wbd_dat_i;
-    logic [31:0] m1_wbd_adr_i;
-    logic [3:0]  m1_wbd_sel_i;
-    logic        m1_wbd_we_i;
-    logic        m1_wbd_cyc_i;
-    logic        m1_wbd_stb_i;
-    logic [31:0] m1_wbd_dat_o;
-    logic        m1_wbd_ack_o;
-    logic        m1_wbd_err_o;
+//     // Master 1 Signals
+//     logic [31:0] m1_wbd_dat_i;
+//     logic [31:0] m1_wbd_adr_i;
+//     logic [3:0]  m1_wbd_sel_i;
+//     logic        m1_wbd_we_i;
+//     logic        m1_wbd_cyc_i;
+//     logic        m1_wbd_stb_i;
+//     logic [31:0] m1_wbd_dat_o;
+//     logic        m1_wbd_ack_o;
+//     logic        m1_wbd_err_o;
 
-    // Slave 0 Signals (UART)
-    logic [31:0] s0_wbd_dat_i;
-    logic        s0_wbd_ack_i;
-    logic [31:0] s0_wbd_dat_o;
-    logic [31:0] s0_wbd_adr_o;
-    logic [3:0]  s0_wbd_sel_o;
-    logic        s0_wbd_we_o;
-    logic        s0_wbd_cyc_o;
-    logic        s0_wbd_stb_o;
+//     // Slave 0 Signals (UART)
+//     logic [31:0] s0_wbd_dat_i;
+//     logic        s0_wbd_ack_i;
+//     logic [31:0] s0_wbd_dat_o;
+//     logic [31:0] s0_wbd_adr_o;
+//     logic [3:0]  s0_wbd_sel_o;
+//     logic        s0_wbd_we_o;
+//     logic        s0_wbd_cyc_o;
+//     logic        s0_wbd_stb_o;
 
-    // Slave 1 Signals (SRAM)
-    logic [31:0] s1_wbd_dat_i;
-    logic        s1_wbd_ack_i;
-    logic [31:0] s1_wbd_dat_o;
-    logic [31:0] s1_wbd_adr_o;
-    logic [3:0]  s1_wbd_sel_o;
-    logic        s1_wbd_we_o;
-    logic        s1_wbd_cyc_o;
-    logic        s1_wbd_stb_o;
+//     // Slave 1 Signals (SRAM)
+//     logic [31:0] s1_wbd_dat_i;
+//     logic        s1_wbd_ack_i;
+//     logic [31:0] s1_wbd_dat_o;
+//     logic [31:0] s1_wbd_adr_o;
+//     logic [3:0]  s1_wbd_sel_o;
+//     logic        s1_wbd_we_o;
+//     logic        s1_wbd_cyc_o;
+//     logic        s1_wbd_stb_o;
 
-    // Instantiate the Wishbone Interconnect module
-    wb_interconnect_2m2s u_wb_interconnect_2m2s (
-        .clk_i(clk_i),
-        .rst_n(rst_n),
-        // Master 0 Interface
-        .m0_wbd_dat_i(m0_wbd_dat_i),
-        .m0_wbd_adr_i(m0_wbd_adr_i),
-        .m0_wbd_sel_i(m0_wbd_sel_i),
-        .m0_wbd_we_i(m0_wbd_we_i),
-        .m0_wbd_cyc_i(m0_wbd_cyc_i),
-        .m0_wbd_stb_i(m0_wbd_stb_i),
-        .m0_wbd_dat_o(m0_wbd_dat_o),
-        .m0_wbd_ack_o(m0_wbd_ack_o),
-        .m0_wbd_err_o(m0_wbd_err_o),
-        // Master 1 Interface
-        .m1_wbd_dat_i(m1_wbd_dat_i),
-        .m1_wbd_adr_i(m1_wbd_adr_i),
-        .m1_wbd_sel_i(m1_wbd_sel_i),
-        .m1_wbd_we_i(m1_wbd_we_i),
-        .m1_wbd_cyc_i(m1_wbd_cyc_i),
-        .m1_wbd_stb_i(m1_wbd_stb_i),
-        .m1_wbd_dat_o(m1_wbd_dat_o),
-        .m1_wbd_ack_o(m1_wbd_ack_o),
-        .m1_wbd_err_o(m1_wbd_err_o),
-        // Slave 0 Interface (UART)
-        .s0_wbd_dat_i(s0_wbd_dat_i),
-        .s0_wbd_ack_i(s0_wbd_ack_i),
-        .s0_wbd_dat_o(s0_wbd_dat_o),
-        .s0_wbd_adr_o(s0_wbd_adr_o),
-        .s0_wbd_sel_o(s0_wbd_sel_o),
-        .s0_wbd_we_o(s0_wbd_we_o),
-        .s0_wbd_cyc_o(s0_wbd_cyc_o),
-        .s0_wbd_stb_o(s0_wbd_stb_o),
-        // Slave 1 Interface (SRAM)
-        .s1_wbd_dat_i(s1_wbd_dat_i),
-        .s1_wbd_ack_i(s1_wbd_ack_i),
-        .s1_wbd_dat_o(s1_wbd_dat_o),
-        .s1_wbd_adr_o(s1_wbd_adr_o),
-        .s1_wbd_sel_o(s1_wbd_sel_o),
-        .s1_wbd_we_o(s1_wbd_we_o),
-        .s1_wbd_cyc_o(s1_wbd_cyc_o),
-        .s1_wbd_stb_o(s1_wbd_stb_o)
-    );
+//     // Instantiate the Wishbone Interconnect module
+//  wb_interconnect_2m2s u_wb_interconnect_2m2s (
+//         .clk_i(clk_i),
+//         .rst_n(rst_n),
+//         // Master 0 Interface
+//         .m0_wbd_dat_i(m0_wbd_dat_i),
+//         .m0_wbd_adr_i(m0_wbd_adr_i),
+//         .m0_wbd_sel_i(m0_wbd_sel_i),
+//         .m0_wbd_we_i(m0_wbd_we_i),
+//         .m0_wbd_cyc_i(m0_wbd_cyc_i),
+//         .m0_wbd_stb_i(m0_wbd_stb_i),
+//         .m0_wbd_dat_o(m0_wbd_dat_o),
+//         .m0_wbd_ack_o(m0_wbd_ack_o),
+//         .m0_wbd_err_o(m0_wbd_err_o),
+//         // Master 1 Interface
+//         .m1_wbd_dat_i(m1_wbd_dat_i),
+//         .m1_wbd_adr_i(m1_wbd_adr_i),
+//         .m1_wbd_sel_i(m1_wbd_sel_i),
+//         .m1_wbd_we_i(m1_wbd_we_i),
+//         .m1_wbd_cyc_i(m1_wbd_cyc_i),
+//         .m1_wbd_stb_i(m1_wbd_stb_i),
+//         .m1_wbd_dat_o(m1_wbd_dat_o),
+//         .m1_wbd_ack_o(m1_wbd_ack_o),
+//         .m1_wbd_err_o(m1_wbd_err_o),
+//         // Slave 0 Interface (UART)
+//         .s0_wbd_dat_i(s0_wbd_dat_i),
+//         .s0_wbd_ack_i(s0_wbd_ack_i),
+//         .s0_wbd_dat_o(s0_wbd_dat_o),
+//         .s0_wbd_adr_o(s0_wbd_adr_o),
+//         .s0_wbd_sel_o(s0_wbd_sel_o),
+//         .s0_wbd_we_o(s0_wbd_we_o),
+//         .s0_wbd_cyc_o(s0_wbd_cyc_o),
+//         .s0_wbd_stb_o(s0_wbd_stb_o),
+//         // Slave 1 Interface (SRAM)
+//         .s1_wbd_dat_i(s1_wbd_dat_i),
+//         .s1_wbd_ack_i(s1_wbd_ack_i),
+//         .s1_wbd_dat_o(s1_wbd_dat_o),
+//         .s1_wbd_adr_o(s1_wbd_adr_o),
+//         .s1_wbd_sel_o(s1_wbd_sel_o),
+//         .s1_wbd_we_o(s1_wbd_we_o),
+//         .s1_wbd_cyc_o(s1_wbd_cyc_o),
+//         .s1_wbd_stb_o(s1_wbd_stb_o)
+//     );

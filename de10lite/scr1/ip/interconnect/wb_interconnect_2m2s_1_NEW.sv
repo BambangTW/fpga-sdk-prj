@@ -117,7 +117,7 @@ module wb_interconnect_2m2s_NEW (
     // Master 1 Address Decoding
     always_comb begin
         if (m1_wbd_cyc_i) begin
-            if (m1_wbd_adr_i[31:16] == 16'hFF01)
+            if (m1_wbd_adr_i[31:16] == 16'hFF02)
                 m1_wb_wr.wbd_tid = TARGET_UART; // Slave 0
             else if (m1_wbd_adr_i[31:16] == 16'hFFFF)
                 m1_wb_wr.wbd_tid = TARGET_SRAM; // Slave 1

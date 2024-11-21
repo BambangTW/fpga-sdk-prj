@@ -306,7 +306,7 @@ assign req_fifo_din.hwdata =  hwdata_in;
         .wr_en    (req_fifo_wr),     // Write enable
         .wr_data  (req_fifo_din),   // Data input
         .full     (req_fifo_full),      // Full flag
-        .empty    (req_fifo_empty),      // Empty flag
+        .empty    (req_fifo_empty)      // Empty flag
         .rd_en    (req_fifo_rd),     // Read enable
         .rd_data  (req_fifo_dout)   // Data output
     );
