@@ -462,8 +462,8 @@ scr1_imem_wb i_imem_wb (
     .imem_rdata     (wb_imem_rdata     ),
     .imem_resp      (wb_imem_resp      ),
     // WB interface
-    .wb_rst_n       (                  ),
-    .wb_clk         (                  ),
+    .wb_rst_n       (core_rst_n_local  ),
+    .wb_clk         (clk               ),
     .wbd_stb_o      (wbd_imem_stb_o    ), 
     .wbd_adr_o      (wbd_imem_adr_o    ), 
     .wbd_we_o       (wbd_imem_we_o     ),  
@@ -490,8 +490,8 @@ scr1_dmem_wb i_dmem_wb (
     .dmem_rdata     (wb_dmem_rdata     ),
     .dmem_resp      (wb_dmem_resp      ),
     // WB interface
-    .wb_rst_n       (                  ),   
-    .wb_clk         (                  ),
+    .wb_rst_n       (core_rst_n_local  ),   
+    .wb_clk         (clk               ),
     .wbd_stb_o      (wbd_dmem_stb_o    ), 
     .wbd_adr_o      (wbd_dmem_adr_o    ), 
     .wbd_we_o       (wbd_dmem_we_o     ),  

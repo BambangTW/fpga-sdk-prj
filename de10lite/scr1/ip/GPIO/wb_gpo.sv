@@ -25,7 +25,7 @@ module wb_gpo
          buf_reg <= 0;
       else   
          if (wr_en)
-            buf_reg <= adr_i[W-1:0];
+            buf_reg <= dat_i[W-1:0];
 
    // Wishbone write enable logic
    assign wr_en = stb_i && we_i;

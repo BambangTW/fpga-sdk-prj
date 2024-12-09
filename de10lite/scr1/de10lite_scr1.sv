@@ -34,10 +34,10 @@ module de10lite_scr1 (
     output logic          [9:0]     LEDR,
     output logic          [7:0]     HEX0,
     output logic          [7:0]     HEX1,
-    output logic          [7:0]     HEX2,
-    output logic          [7:0]     HEX3,
-    output logic          [7:0]     HEX4,
-    output logic          [7:0]     HEX5,
+    output logic          [6:0]     HEX2,
+    output logic          [6:0]     HEX3,
+    output logic          [6:0]     HEX4,
+    output logic          [6:0]     HEX5,
     // === Buttons =========================================
     input  logic          [1:0]     KEY,
     // === Switches ========================================
@@ -294,24 +294,24 @@ scr1_top_wb u_scr1_top_wb (
 `endif//SCR1_DBG_EN
 
     // Instruction Memory Interface
-    .wbd_imem_stb_o     (wb_imem_stb_i),
-    .wbd_imem_adr_o     (wb_imem_adr_i),
-    .wbd_imem_we_o      (wb_imem_we_i),
-    .wbd_imem_dat_o     (wb_imem_dat_i),
-    .wbd_imem_sel_o     (wb_imem_sel_i),
-    .wbd_imem_dat_i     (wb_imem_dat_o),
-    .wbd_imem_ack_i     (wb_imem_ack_o),
-    .wbd_imem_err_i     (wb_imem_err_o),
+    .wbd_imem_stb_o      (wb_imem_stb_i),        // strobe/request
+    .wbd_imem_adr_o      (wb_imem_adr_i),        // address
+    .wbd_imem_we_o       (wb_imem_we_i),        // write
+    .wbd_imem_dat_o      (wb_imem_dat_i),        // data output
+    .wbd_imem_sel_o      (wb_imem_sel_i),        // byte enable
+    .wbd_imem_dat_i      (wb_imem_dat_o),        // data input
+    .wbd_imem_ack_i      (wb_imem_ack_o),        // acknowledgment
+    .wbd_imem_err_i      (wb_imem_err_o),        // error
 
     // Data Memory Interface
-    .wbd_dmem_stb_o     (wb_dmem_stb_i),
-    .wbd_dmem_adr_o     (wb_dmem_adr_i),
-    .wbd_dmem_we_o      (wb_dmem_we_i),
-    .wbd_dmem_dat_o     (wb_dmem_dat_i),
-    .wbd_dmem_sel_o     (wb_dmem_sel_i),
-    .wbd_dmem_dat_i     (wb_dmem_dat_o),
-    .wbd_dmem_ack_i     (wb_dmem_ack_o),
-    .wbd_dmem_err_i     (wb_dmem_err_o)
+    .wbd_dmem_stb_o      (wb_dmem_stb_i),        // strobe/request
+    .wbd_dmem_adr_o      (wb_dmem_adr_i),        // address
+    .wbd_dmem_we_o       (wb_dmem_we_i),        // write
+    .wbd_dmem_dat_o      (wb_dmem_dat_i),        // data output
+    .wbd_dmem_sel_o      (wb_dmem_sel_i),        // byte enable
+    .wbd_dmem_dat_i      (wb_dmem_dat_o),        // data input
+    .wbd_dmem_ack_i      (wb_dmem_ack_o),        // acknowledgment
+    .wbd_dmem_err_i      (wb_dmem_err_o)         // error
 );
 
 // scr1_top_ahb
@@ -490,19 +490,19 @@ logic [31:0] wb_bram_rdata;                // Wishbone read data, 32 bits
 logic wb_bram_ack;                         // Wishbone acknowledge signal
 logic wb_bram_err;                         // Wishbone error signal
 
-// Instantiate the bram32_wishbone_wrapper
-bram32_wishbone_wrapper bram32_inst (
-    .clk(cpu_clk),           // Connect clock
-    .rst_n(soc_rst_n),           // Connect reset
-    .wb_adr_i(wb_bram_addr), // Connect address input
-    .wb_dat_i(wb_bram_wdata), // Connect data input for writes
-    .wb_dat_o(wb_bram_rdata), // Connect data output for reads
-    .wb_we_i(wb_bram_we),   // Connect write enable
-    .wb_stb_i(wb_bram_stb), // Connect strobe
-    .wb_cyc_i(wb_bram_cyc), // Connect cycle
-    .wb_ack_o(wb_bram_ack), // Connect acknowledge
-    .wb_err_o(wb_bram_err)  // Connect error output
-);
+//// Instantiate the bram32_wishbone_wrapper
+//bram32_wishbone_wrapper bram32_inst (
+//    .clk(cpu_clk),           // Connect clock
+//    .rst_n(soc_rst_n),           // Connect reset
+//    .wb_adr_i(wb_bram_addr), // Connect address input
+//    .wb_dat_i(wb_bram_wdata), // Connect data input for writes
+//    .wb_dat_o(wb_bram_rdata), // Connect data output for reads
+//    .wb_we_i(wb_bram_we),   // Connect write enable
+//    .wb_stb_i(wb_bram_stb), // Connect strobe
+//    .wb_cyc_i(wb_bram_cyc), // Connect cycle
+//    .wb_ack_o(wb_bram_ack), // Connect acknowledge
+//    .wb_err_o(wb_bram_err)  // Connect error output
+//);
 
     
 
@@ -584,41 +584,22 @@ logic        wb_gpio_cyc;    // WISHBONE cycle signal
 logic        wb_gpio_stb;    // WISHBONE strobe signal
 logic [31:0] wb_gpio_adr;    // WISHBONE address bit
 logic        wb_gpio_we;     // WISHBONE write enable
-logic [31:0] wb_gpio_dat_i;  // Data input from WISHBONE
-logic [31:0] wb_gpio_dat_o;  // Data output to WISHBONE
+logic [7:0] wb_gpio_dat_i;  // Data input from WISHBONE
+logic [7:0] wb_gpio_dat_o;  // Data output to WISHBONE
 logic        wb_gpio_ack;    // Acknowledge signal
 logic [7:0]  gpio_bus;       // Bidirectional GPIO bus
 
-// // Instantiation of the simple_gpio module
-// simple_gpio #(
-//     .io(8)  // Set the parameter for the number of GPIOs (max 8)
-// ) u_simple_gpio (
-//     .clk_i(cpu_clk),       // Connect clock
-//     .rstn_i(soc_rst_n),       // Connect reset
-//     .cyc_i(wb_gpio_cyc),       // Connect cycle signal
-//     .stb_i(wb_gpio_stb),       // Connect strobe signal
-//     .adr_i(wb_gpio_adr),       // Connect address signal
-//     .we_i(wb_gpio_we),         // Connect write enable
-//     .dat_i(wb_gpio_dat_i),     // Connect data input
-//     .dat_o(wb_gpio_dat_o),     // Connect data output
-//     .ack_o(wb_gpio_ack),       // Connect acknowledge
-//     .gpio(gpio_bus)            // Connect GPIO pins
-// );
-
-// Instantiation of the wishbone GPO module
-//wb_gpo #(
-//    .W(8)  // Set the parameter for the data width (default is 8)
-//) u_wb_gpo (
-//    .clk_i(cpu_clk),       // Connect clock
-//    .reset_n(soc_rst_n),       // Connect reset
-//    .stb_i(wb_gpio_stb),       // Connect cycle signal
-//    .we_i(wb_gpio_we),       // Connect strobe signal
-//    .adr_i(wb_gpio_adr),       // Connect address signal
-//    .dat_i(wb_gpio_dat_i),         // Connect write enable
-//    .dat_o(wb_gpio_dat_o),     // Connect data input
-//    .ack_o(wb_gpio_ack),        // Connect acknowledge
-//    .gpo_o(gpio_bus)          // Connect GPIO pins
-//);
+// Instantiate WBOPRT08
+WBOPRT08 u_WBOPRT08 (
+    .ACK_O(wb_gpio_ack),      // Connect acknowledge signal
+    .CLK_I(cpu_clk),      // Connect clock
+    .DAT_I(wb_gpio_dat_i),    // Connect data input
+    .DAT_O(wb_gpio_dat_o),    // Connect data output
+    .RST_I(~soc_rst_n),      // Connect reset
+    .STB_I(wb_gpio_stb),      // Connect strobe
+    .WE_I(wb_gpio_we),        // Connect write enable
+    .PRT_O(gpio_bus)     // Connect output port
+);
 
 //=======================================================
 //  FPGA Platform's System-on-Programmable-Chip (SOPC)
@@ -726,8 +707,30 @@ assign LEDR[7:0] 	  =  gpio_bus;
 assign LEDR[8]      = ~hard_rst_n;
 assign LEDR[9]      =  heartbeat;
 //assign {HEX1,HEX0}  =  pio_hex_1_0;
-assign {HEX3,HEX2}  =  pio_hex_3_2;
-assign {HEX5,HEX4}  =  pio_hex_5_4;
+
+// Seven-Segment Display Outputs
+seven_seg display_0 (
+    .hex_digit(wb_imem_adr_i[18:15]),
+    .segments(HEX2)
+);
+
+seven_seg display_1 (
+    .hex_digit(wb_imem_adr_i[22:19]),
+    .segments(HEX3)
+);
+
+seven_seg display_2 (
+    .hex_digit(wb_imem_adr_i[26:23]),
+    .segments(HEX4)
+);
+
+seven_seg display_3 (
+    .hex_digit(wb_imem_adr_i[31:27]),
+    .segments(HEX5)
+);
+
+// assign {HEX3,HEX2}  =  pio_hex_3_2;
+// assign {HEX5,HEX4}  =  pio_hex_5_4;
 
 //==========================================================
 // DIP Switch

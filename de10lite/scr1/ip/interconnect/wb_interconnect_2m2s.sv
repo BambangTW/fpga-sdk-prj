@@ -111,8 +111,9 @@ type_wb_rd_intf  s_bus_rd;  // Multiplexed Slave Read Interface
 //-------------------------------------------------------------------
 
 // Master 0 Target ID based on address
-wire [3:0] m0_wbd_tid_i = (m0_wbd_adr_i[31:16] == 16'hFF02) ? TARGET_SLAVE0 :
-                          (m0_wbd_adr_i[31:16] == 16'hFFFF) ? TARGET_SLAVE1 : 4'b0000;
+// wire [3:0] m0_wbd_tid_i = (m0_wbd_adr_i[31:16] == 16'hFF02) ? TARGET_SLAVE0 :
+//                           (m0_wbd_adr_i[31:16] == 16'hFFFF) ? TARGET_SLAVE1 : 4'b0000;
+wire [3:0] m0_wbd_tid_i = (m0_wbd_adr_i[31:16] == 16'hFFFF) ? TARGET_SLAVE1 : 4'b0000;
 
 // Master 1 Target ID based on address
 wire [3:0] m1_wbd_tid_i = (m1_wbd_adr_i[31:16] == 16'hFF02) ? TARGET_SLAVE0 :

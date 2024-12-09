@@ -25,7 +25,7 @@ module WBOPRT08 (
 
     // Combinational assignments
     assign ACK_O = STB_I;
-    assign DAT_O = Q;
+    assign DAT_O = 8'b00000000;
     assign PRT_O = Q;
 
 endmodule
